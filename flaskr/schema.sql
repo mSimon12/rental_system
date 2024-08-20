@@ -1,0 +1,24 @@
+DROP TABLE IF EXISTS shelves;
+DROP TABLE IF EXISTS generic_shelf;
+DROP TABLE IF EXISTS clients;
+
+CREATE TABLE shelves (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT UNIQUE NOT NULL,
+  description TEXT NOT NULL
+);
+
+CREATE TABLE generic_shelf (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  item TEXT UNIQUE NOT NULL,
+  description TEXT NOT NULL,
+  stock_size VALUE NOT NULL,
+  available VALUE
+);
+
+CREATE TABLE clients (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  age VALUE NOT NULL
+);
