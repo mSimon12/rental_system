@@ -4,6 +4,7 @@ import os
 from . import db
 from . import store
 from . import shelf_manager
+from . import clients
 
 
 def create_app(test_config=None):
@@ -35,5 +36,6 @@ def create_app(test_config=None):
 
     app.register_blueprint(shelf_manager.bp)
     app.register_blueprint(store.bp)
+    app.register_blueprint(clients.bp)
 
     return app
