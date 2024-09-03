@@ -1,0 +1,12 @@
+{% extends "base.html"%}
+
+{% block content%}
+<h2>Available items</h2>
+    <ul>
+        {% for id,name,available in template_items %}
+            <li><a href="/store/{{ id }}">{{ name | capitalize }}</a> - {{ available }} units available</li>
+        {% endfor %}
+
+    </ul>
+
+{% endblock %}
