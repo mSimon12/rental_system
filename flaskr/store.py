@@ -1,12 +1,53 @@
 
-from flask import Blueprint, current_app, request
+from flask import Blueprint, current_app, request, render_template
 
 from flaskr.db import get_db
 
 bp = Blueprint('store', __name__, url_prefix='/store')
 
 
-def check_item_existence(item_name):
+def get_store_items():
+    db = get_db()
+
+    items = db.execute(
+        'SELECT * FROM generic_shelf'
+    ).fetchall()
+
+    return items
+
+
+@bp.route('/')
+def store():
+    items = get_store_items()
+    items = [(item['id'], item['item'],item['available']) for item in items]
+    return render_template("store.html", template_items = items)
+
+
+def get_product_info_by_id(id):
+    db = get_db()
+
+    item = db.execute(
+        'SELECT * FROM generic_shelf WHERE id=?', (id,)
+    ).fetchone()
+
+    if item:
+        return dict(item)
+    return None
+
+
+@bp.route('/<int:id>')
+def product_view(id):
+    item_info = get_product_info_by_id(id)
+    if not item_info:
+        return '', 404
+    return render_template("product_view.html",
+                           template_product_name = item_info['item'],
+                           template_product_description = item_info['description'],
+                           template_product_available = item_info['available'],
+                           template_product_stock = item_info['stock_size'])
+
+
+def check_item_existence_by_name(item_name):
     db = get_db()
 
     item = db.execute(
@@ -45,7 +86,7 @@ def check_item_full_stock(item_name):
 
 
 def pop_item_from_db(item_name):
-    if not check_item_existence(item_name):
+    if not check_item_existence_by_name(item_name):
         return False, 'Required item not found'
 
     if not check_item_availability(item_name):
@@ -65,7 +106,7 @@ def pop_item_from_db(item_name):
 
 
 def append_item_to_db(item_name):
-    if not check_item_existence(item_name):
+    if not check_item_existence_by_name(item_name):
         return False, 'Required item not found'
 
     if check_item_full_stock(item_name):
