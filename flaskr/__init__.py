@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 import os
 
 from . import db
@@ -30,7 +30,7 @@ def create_app(test_config=None):
 
     @app.route("/")
     def main_page():
-        return "Welcome!"
+        return render_template("base.html")
 
     db.init_app(app)
 

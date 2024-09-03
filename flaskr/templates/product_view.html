@@ -1,0 +1,10 @@
+{% extends "base.html"%}
+
+{% block content%}
+<h2>{{ template_product_name }}</h2>
+    <h3>Description</h3>
+    <p>{{ template_product_description }}</p>
+    <p>*Available {{ template_product_available }}/{{ template_product_stock }}</p>
+
+<a href="/store/">Go back to store</a>
+{% endblock %}
