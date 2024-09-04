@@ -1,10 +1,12 @@
 
-from flask import Blueprint, current_app, request, render_template
-
+from flask import Blueprint, current_app, request, render_template, Flask
 from flaskr.db import get_db
+
+from flaskr.store_forms import CommentForm
 
 bp = Blueprint('store', __name__, url_prefix='/store')
 
+comments = []
 
 def get_store_items():
     db = get_db()
@@ -35,8 +37,14 @@ def get_product_info_by_id(id):
     return None
 
 
-@bp.route('/<int:id>')
+@bp.route('/<int:id>', methods=['GET', 'POST'])
 def product_view(id):
+    comment_form = CommentForm()
+
+    if request.method == 'POST':
+        comments.append(comment_form.new_comment.data)
+        comment_form.new_comment.data = None
+
     item_info = get_product_info_by_id(id)
     if not item_info:
         return '', 404
@@ -44,7 +52,9 @@ def product_view(id):
                            template_product_name = item_info['item'],
                            template_product_description = item_info['description'],
                            template_product_available = item_info['available'],
-                           template_product_stock = item_info['stock_size'])
+                           template_product_stock = item_info['stock_size'],
+                           template_product_comments = comments,
+                           template_add_comment = comment_form)
 
 
 def check_item_existence_by_name(item_name):
