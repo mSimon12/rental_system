@@ -2,9 +2,36 @@
 
 {% block content%}
 <h2>{{ template_product_name }}</h2>
-    <h3>Description</h3>
+<h3>Description</h3>
     <p>{{ template_product_description }}</p>
     <p>*Available {{ template_product_available }}/{{ template_product_stock }}</p>
 
+<!--<form action="{{ url_for('store.rent_item_request') }}" method="PUT">-->
+<!--    <input id="rent_submit" name="rent_submit" type="submit" value="RentVolume">-->
+<!--</form>-->
+<!--<form action="{{ url_for('store.rent_item_request') }}" method="PUT">-->
+<!--    <input id="return_submit" name="return_submit" type="submit" value="ReturnVolume">-->
+<!--</form>-->
+
 <a href="/store/">Go back to store</a>
+<hr>
+
+<h3>Comments</h3>
+    <ul>
+        {% for comment in template_product_comments %}
+        <li> {{comment}} </li>
+        {% endfor %}
+    </ul>
+
+    <form method="POST">
+        {{ template_add_comment.hidden_tag() }}
+        <p>
+            {{ template_add_comment.new_comment.label }}
+            {{ template_add_comment.new_comment() }}
+        </p>
+        <p>
+            {{ template_add_comment.submit_comment() }}
+        </p>
+    </form>
+
 {% endblock %}
