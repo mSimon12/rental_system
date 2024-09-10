@@ -1,0 +1,41 @@
+{% extends "base.html"%}
+
+{% block content%}
+<h2>Store Management</h2>
+    <h3>Store Items</h3>
+        <table style="width:20%">
+          <tr>
+            <td>ID</td>
+            <td>Title</td>
+          </tr>
+            {% for id,name in template_items.items() %}
+              <tr>
+                <td>{{ id }} </td>
+                <td>{{ name | capitalize }}</td>
+              </tr>
+            {% endfor %}
+        </table>
+
+    <hr>
+    <h3>Add Item</h3>
+        <form method="POST">
+            <table style="width:30%">
+                <tr>
+                    <td>{{ template_add_item.name.label }}:</td>
+                    <td>{{ template_add_item.name }}</td>
+                </tr>
+                <tr>
+                    <td>{{ template_add_item.description.label }}:</td>
+                    <td>{{ template_add_item.description }}</td>
+                </tr>
+                <tr>
+                    <td>{{ template_add_item.stock.label }}:</td>
+                    <td>{{ template_add_item.stock }}</td>
+                </tr>
+                <tr>
+                    <td>{{ template_add_item.submit }}</td>
+                </tr>
+            </table>
+        </form>
+
+{% endblock %}
