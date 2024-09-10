@@ -1,6 +1,8 @@
 from flask import Flask, render_template
 import os
 
+
+from . import api
 from . import db
 from . import store
 from . import shelf_manager
@@ -33,6 +35,9 @@ def create_app(test_config=None):
         return render_template("base.html")
 
     db.init_app(app)
+
+    # Add store API
+    app.register_blueprint(api.bp)
 
     app.register_blueprint(shelf_manager.bp)
     app.register_blueprint(store.bp)
