@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SubmitField, IntegerField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, NumberRange
 
 class CommentForm(FlaskForm):
     new_comment = TextAreaField("New Comment:", validators=[DataRequired()])
@@ -9,5 +9,5 @@ class CommentForm(FlaskForm):
 class AddItemForm(FlaskForm):
     name = StringField("Name", validators=[DataRequired()])
     description = TextAreaField("Description")
-    stock = IntegerField("Stock", validators=[DataRequired()])
+    stock = IntegerField("Stock", validators=[DataRequired(), NumberRange(min=1)])
     submit = SubmitField("Submit")
