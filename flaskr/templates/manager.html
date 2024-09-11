@@ -3,37 +3,42 @@
 {% block content%}
 <h2>Store Management</h2>
     <h3>Store Items</h3>
-        <table style="width:20%">
+        <table style="width:50%">
           <tr>
-            <td>ID</td>
-            <td>Title</td>
+            <td><b>Title</b></td>
+            <td><b>Description</b></td>
+            <td><b>Stock</b></td>
+            <td><b>Rented</b></td>
           </tr>
-            {% for id,name in template_items.items() %}
+            {% for item in template_items %}
               <tr>
-                <td>{{ id }} </td>
-                <td>{{ name | capitalize }}</td>
+                <td>{{ template_items[item].item | capitalize }} </td>
+                <td>{{ template_items[item].description | capitalize }}</td>
+                <td>{{ template_items[item].stock_size }}</td>
+                <td>{{ template_items[item].stock_size - template_items[item].available }}</td>
               </tr>
             {% endfor %}
         </table>
 
     <hr>
     <h3>Add Item</h3>
-        <form method="POST">
+        <form action="/manager" method="POST">
+            {{ template_add_item.hidden_tag() }}
             <table style="width:30%">
                 <tr>
                     <td>{{ template_add_item.name.label }}:</td>
-                    <td>{{ template_add_item.name }}</td>
+                    <td>{{ template_add_item.name() }}</td>
                 </tr>
                 <tr>
                     <td>{{ template_add_item.description.label }}:</td>
-                    <td>{{ template_add_item.description }}</td>
+                    <td>{{ template_add_item.description() }}</td>
                 </tr>
                 <tr>
                     <td>{{ template_add_item.stock.label }}:</td>
-                    <td>{{ template_add_item.stock }}</td>
+                    <td>{{ template_add_item.stock() }}</td>
                 </tr>
                 <tr>
-                    <td>{{ template_add_item.submit }}</td>
+                    <td>{{ template_add_item.submit() }}</td>
                 </tr>
             </table>
         </form>
