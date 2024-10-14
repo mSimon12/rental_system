@@ -1,7 +1,19 @@
 # Rental System
-This is a generic system to be used for renting items
+
+This is an application for managing the rental of items from a store. It includes a managing page for updating the store stock. As well as the interface for clients to rent and return the items.
 
 ## Installation 
+
+To accomplish the installation of this system, follow these steps:
+
+```
+git clone https://github.com/mSimon12/rental_system
+cd rental_system
+pip install -r requirements.txt
+
+flask --app flaskr init-db
+flask --app flaskr run
+```
 
 ## Getting Started
 
