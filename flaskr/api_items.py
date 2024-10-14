@@ -1,7 +1,7 @@
 from flask import Blueprint, current_app, request, jsonify, flash, url_for
 
 from flaskr.db import get_db
-bp = Blueprint('api', __name__, url_prefix='/api')
+bp = Blueprint('api-items', __name__, url_prefix='/api/items')
 
 
 item_pattern = {
@@ -152,7 +152,7 @@ def append_item_to_db(item_id):
 ####################################################################################
 # API calls
 
-@bp.route('/items')
+@bp.route('/')
 def get_items_request():
     db = get_db()
 
@@ -167,7 +167,7 @@ def get_items_request():
         return 'Required item not found', 404
 
 
-@bp.route('/items', methods=['POST'])
+@bp.route('/', methods=['POST'])
 def add_item_request():
 
     request_input = request.get_json()
@@ -185,7 +185,7 @@ def add_item_request():
         return '', 400
 
 
-@bp.route('/items', methods=['DELETE'])
+@bp.route('/', methods=['DELETE'])
 def delete_item_request():
     request_input = request.get_json()
 
@@ -198,18 +198,19 @@ def delete_item_request():
         return 'Required item not found', 404
 
 
-@bp.route('/items/<int:id>')
-def get_item_info(id):
-    info = get_item_info_from_db(id)
+@bp.route('/<int:item_id>')
+def get_item_info(item_id):
+    info = get_item_info_from_db(item_id)
 
     if info:
         return jsonify(info)
     else:
         return 'Required item not found', 404
 
-@bp.route('/items/<int:id>/rent', methods=['PUT'])
-def rent_item_request(id):
-    status, er_msg = pop_item_from_db(id)
+
+@bp.route('/<int:item_id>/rent', methods=['PUT'])
+def rent_item_request(item_id):
+    status, er_msg = pop_item_from_db(item_id)
 
     if status:
         return '', 204
@@ -217,9 +218,9 @@ def rent_item_request(id):
         return er_msg, 404
 
 
-@bp.route('/items/<int:id>/return', methods=['PUT'])
-def return_item_request(id):
-    status, er_msg = append_item_to_db(id)
+@bp.route('/<int:item_id>/return', methods=['PUT'])
+def return_item_request(item_id):
+    status, er_msg = append_item_to_db(item_id)
 
     if status:
         return '', 204
