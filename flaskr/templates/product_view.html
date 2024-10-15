@@ -5,6 +5,19 @@
 <h3>Description</h3>
     <p>{{ template_product_description }}</p>
     <p>*Available {{ template_product_available }}/{{ template_product_stock }}</p>
+
+    <div style="display: flex;">
+        <form method="POST">
+            {{ template_rent_button.hidden_tag() }}
+            {{ template_rent_button.rent_item() }}
+        </form>
+        <form method="POST">
+            {{ template_return_button.hidden_tag() }}
+            {{ template_return_button.return_item() }}
+        </form>
+    </div>
+
+
 <a href="/store/">Go back to store</a>
 <hr>
 

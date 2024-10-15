@@ -29,9 +29,25 @@ def get_store_items():
     return store_items
 
 
-def add_new_item_to_store(new_item):
+def add_new_item_to_store(new_item) -> bool:
     resp = requests.post('http://127.0.0.1:5000/api/items', json= new_item)
     if resp.status_code == 201:
         return True
 
     return False
+
+
+def rent_item(item_id) -> bool:
+    resp = requests.put(f"http://127.0.0.1:5000/api/items/{item_id}/rent")
+    if resp.status_code == 204:
+        return True
+    else:
+        return False
+
+
+def return_item(item_id) -> bool:
+    resp = requests.put(f"http://127.0.0.1:5000/api/items/{item_id}/return")
+    if resp.status_code == 204:
+        return True
+    else:
+        return False
