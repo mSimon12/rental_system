@@ -11,3 +11,9 @@ class AddItemForm(FlaskForm):
     description = TextAreaField("Description")
     stock = IntegerField("Stock", validators=[DataRequired(), NumberRange(min=1)])
     submit = SubmitField("Submit")
+
+class RentItemForm(FlaskForm):
+    rent_item = SubmitField("Rent")
+
+class ReturnItemForm(FlaskForm):
+    return_item = SubmitField("Return")

@@ -29,10 +29,11 @@ The evolution of this project follows the sequence described below:
 4. Included basic template for store main page, showing the items list and the available amount. Items specific pages were also included for accessing extra information and for item rental.
 5. Manager page was inserted for store management.
 6. API interface have been implemented to decouple and translate calls made in the Frontend to the Backend.
+7. Implemented rent and return buttons in store/item
+
 
 ### To-Do: 
 * Track who rented each item
-* Allow renting/returning in store/item
 * Implement Login authentication
 * Save comments added on item page
 
