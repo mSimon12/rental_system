@@ -35,3 +35,7 @@ The evolution of this project follows the sequence described below:
 * Allow renting/returning in store/item
 * Implement Login authentication
 * Save comments added on item page
+
+## System view
+
+![Representation of the system components](images/architecture.png)
