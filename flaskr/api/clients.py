@@ -1,7 +1,5 @@
-from crypt import methods
-
 from flask import Blueprint, request, jsonify
-from flaskr.db import get_db
+from flaskr.api.db import get_db
 
 bp = Blueprint('api-clients', __name__, url_prefix='/api/clients')
 

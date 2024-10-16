@@ -1,12 +1,8 @@
 from flask import Flask, render_template
 import os
 
-
-from . import api_items
-from . import db
-from . import store
-from . import shelf_manager
-from . import api_clients
+from . import store, shelf_manager
+from flaskr.api import clients, items, db
 
 
 def create_app(test_config=None):
@@ -37,10 +33,10 @@ def create_app(test_config=None):
     db.init_app(app)
 
     # Add store API
-    app.register_blueprint(api_items.bp)
+    app.register_blueprint(items.bp)
 
     app.register_blueprint(shelf_manager.bp)
     app.register_blueprint(store.bp)
-    app.register_blueprint(api_clients.bp)
+    app.register_blueprint(clients.bp)
 
     return app
