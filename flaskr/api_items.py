@@ -1,4 +1,5 @@
 from flask import Blueprint, current_app, request, jsonify, flash, url_for
+from datetime import datetime
 
 from flaskr.db import get_db
 bp = Blueprint('api-items', __name__, url_prefix='/api/items')
@@ -110,7 +111,7 @@ def check_item_full_stock(item_id):
     return False
 
 
-def pop_item_from_db(item_id):
+def pop_item_from_db(item_id, client):
     if not check_item_existence(item_id):
         return False, 'Required item not found'
 
@@ -124,13 +125,21 @@ def pop_item_from_db(item_id):
             (item_id,),
         )
         db.commit()
+
+        # Save matched info item x client
+        rent_date = datetime.now().date()
+        db.execute(
+            "INSERT INTO items_rent_control (item_id, client_id, rent_date) VALUES (?, ?, ?)",
+            (item_id, client, rent_date),
+        )
+        db.commit()
     except db.Error:
-        return False, 'Error updating item from database'
+        return False, 'Error popping item from database'
     else:
         return True, ''
 
 
-def append_item_to_db(item_id):
+def append_item_to_db(item_id, client):
     if not check_item_existence(item_id):
         return False, 'Required item not found'
 
@@ -142,6 +151,14 @@ def append_item_to_db(item_id):
         db.execute(
             "UPDATE generic_shelf SET available = available+1 WHERE id = ?",
             (item_id,),
+        )
+        db.commit()
+
+        # Update matched info item x client
+        return_date = datetime.now().date()
+        db.execute(
+            "UPDATE items_rent_control SET return_date = ? WHERE item_id = ? AND client_id = ?",
+            (return_date, item_id, client),
         )
         db.commit()
     except db.Error:
@@ -210,7 +227,13 @@ def get_item_info(item_id):
 
 @bp.route('/<int:item_id>/rent', methods=['PUT'])
 def rent_item_request(item_id):
-    status, er_msg = pop_item_from_db(item_id)
+    request_input = request.get_json()
+
+    if 'client_id' not in request_input.keys():
+        return 'Bad data', 400
+    client_id = request_input['client_id']
+
+    status, er_msg = pop_item_from_db(item_id, client_id)
 
     if status:
         return '', 204
@@ -220,7 +243,12 @@ def rent_item_request(item_id):
 
 @bp.route('/<int:item_id>/return', methods=['PUT'])
 def return_item_request(item_id):
-    status, er_msg = append_item_to_db(item_id)
+    request_input = request.get_json()
+    if 'client_id' not in request_input.keys():
+        return 'Bad data', 400
+    client_id = request_input['client_id']
+
+    status, er_msg = append_item_to_db(item_id, client_id)
 
     if status:
         return '', 204
