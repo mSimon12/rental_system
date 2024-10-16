@@ -1,9 +1,8 @@
-from flask import Blueprint, current_app, request, jsonify, flash, url_for
-from datetime import datetime
+from flask import Blueprint, request, jsonify
+from flaskr.api.db import get_db
+from flaskr.api.clients_items import item_rented_by_client, item_returned_by_client
 
-from flaskr.db import get_db
 bp = Blueprint('api-items', __name__, url_prefix='/api/items')
-
 
 item_pattern = {
     'item': str,
@@ -111,7 +110,7 @@ def check_item_full_stock(item_id):
     return False
 
 
-def pop_item_from_db(item_id, client):
+def pop_item_from_db(item_id):
     if not check_item_existence(item_id):
         return False, 'Required item not found'
 
@@ -126,20 +125,13 @@ def pop_item_from_db(item_id, client):
         )
         db.commit()
 
-        # Save matched info item x client
-        rent_date = datetime.now().date()
-        db.execute(
-            "INSERT INTO items_rent_control (item_id, client_id, rent_date) VALUES (?, ?, ?)",
-            (item_id, client, rent_date),
-        )
-        db.commit()
     except db.Error:
         return False, 'Error popping item from database'
     else:
         return True, ''
 
 
-def append_item_to_db(item_id, client):
+def append_item_to_db(item_id):
     if not check_item_existence(item_id):
         return False, 'Required item not found'
 
@@ -154,13 +146,6 @@ def append_item_to_db(item_id, client):
         )
         db.commit()
 
-        # Update matched info item x client
-        return_date = datetime.now().date()
-        db.execute(
-            "UPDATE items_rent_control SET return_date = ? WHERE item_id = ? AND client_id = ?",
-            (return_date, item_id, client),
-        )
-        db.commit()
     except db.Error:
         return False, 'Error updating item from database'
     else:
@@ -233,7 +218,10 @@ def rent_item_request(item_id):
         return 'Bad data', 400
     client_id = request_input['client_id']
 
-    status, er_msg = pop_item_from_db(item_id, client_id)
+    if not item_rented_by_client(item_id, client_id):
+        return 'Error updating the item_client database', 409
+
+    status, er_msg = pop_item_from_db(item_id)
 
     if status:
         return '', 204
@@ -248,7 +236,10 @@ def return_item_request(item_id):
         return 'Bad data', 400
     client_id = request_input['client_id']
 
-    status, er_msg = append_item_to_db(item_id, client_id)
+    if not item_returned_by_client(item_id, client_id):
+        return 'Error updating the item_client database', 409
+
+    status, er_msg = append_item_to_db(item_id)
 
     if status:
         return '', 204
