@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 import os
 
-from . import store, shelf_manager
+from . import store, shelf_manager, user
 from flaskr.api import clients, items, db
 
 
@@ -38,5 +38,6 @@ def create_app(test_config=None):
     app.register_blueprint(shelf_manager.bp)
     app.register_blueprint(store.bp)
     app.register_blueprint(clients.bp)
+    app.register_blueprint(user.bp)
 
     return app
