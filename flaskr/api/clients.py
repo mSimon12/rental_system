@@ -16,12 +16,12 @@ def check_client_by_id(client_id):
     return False, client_info
 
 
-def check_client_by_name(first_name, last_name):
+def check_client_by_username(username):
     db = get_db()
 
     client_info = db.execute(
-        'SELECT * FROM clients WHERE first_name = ? AND last_name = ?',
-        (first_name.lower(), last_name.lower())
+        'SELECT * FROM clients WHERE username = ?',
+        (username,)
     ).fetchone()
 
     if client_info:
@@ -30,15 +30,15 @@ def check_client_by_name(first_name, last_name):
 
 
 def add_new_client(client_info):
-    firstname = client_info['first_name'].lower()
-    lastname = client_info['last_name'].lower()
-    age = client_info['age'] if 'age' in client_info else None
+    username = client_info['username']
+    email = client_info['email']
+    password = client_info['password']
 
     db = get_db()
     try:
         db.execute(
-            "INSERT INTO clients (first_name, last_name, age) VALUES (?,?,?)",
-            (firstname,lastname,age)
+            "INSERT INTO clients (username, email, password) VALUES (?,?,?)",
+            (username, email, password)
         )
         db.commit()
     except db.Error:
@@ -51,15 +51,17 @@ def add_new_client(client_info):
 def add_client():
     request_input = request.get_json()
 
-    if 'first_name' not in request_input:
-        return 'first_name missing!', 400
-    elif 'last_name' not in request_input:
-        return 'last_name missing!', 400
+    if 'username' not in request_input:
+        return 'username missing!', 400
+    elif 'password' not in request_input:
+        return 'password missing!', 400
+    elif 'email' not in request_input:
+        return 'email missing!', 400
 
-    already_client, info = check_client_by_name(request_input['first_name'], request_input['last_name'])
+    already_client, info = check_client_by_username(request_input['username'])
 
     if already_client:
-        return f"Client {request_input['first_name']} {request_input['last_name']}  is already registered.", 400
+        return f"Username {request_input['username']} is already registered.", 400
 
     if add_new_client(request_input):
         return '', 201
@@ -72,7 +74,7 @@ def get_clients_request():
     db = get_db()
 
     clients = db.execute(
-        'SELECT id,first_name,last_name FROM clients'
+        'SELECT id,username,email FROM clients'
     ).fetchall()
 
     print(clients)
