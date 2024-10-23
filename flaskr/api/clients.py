@@ -47,6 +47,35 @@ def add_new_client(client_info):
     return True
 
 
+def delete_client_from_db(client_info):
+    username = client_info['username']
+    password = client_info['password']
+
+    db = get_db()
+
+    client = db.execute(
+        'SELECT * FROM clients WHERE username = ? AND password = ?',
+        (username,password)
+    ).fetchone()
+
+    if client:
+        try:
+            db.execute(
+                "DELETE FROM clients WHERE id = ?",
+                (client['id'],)
+            )
+            db.commit()
+        except db.Error:
+            return False
+        else:
+            return True
+
+    return False
+
+####################################################################################
+# API calls
+
+
 @bp.route('/add', methods = ['POST'])
 def add_client():
     request_input = request.get_json()
@@ -77,15 +106,13 @@ def get_clients_request():
         'SELECT id,username,email FROM clients'
     ).fetchall()
 
-    print(clients)
-
     if clients:
         clients_dict = {}
         for client in clients:
-            clients_dict[client["id"]] = client["first_name"] + " " + client["last_name"]
-        return jsonify(clients_dict)
+            clients_dict[client["id"]] = {"username": client["username"], "email": client["email"]}
+        return jsonify(clients_dict), 200
     else:
-        return 'Required item not found', 404
+        return 'No clients registered', 200
 
 
 @bp.route('/<int:client_id>')
@@ -94,3 +121,18 @@ def get_client_info(client_id):
     if status:
         return jsonify(client_info), 200
     return '', 404
+
+
+@bp.route('/', methods=['DELETE'])
+def delete_client_request():
+    request_input = request.get_json()
+
+    if 'username' not in request_input:
+        return 'username missing!', 400
+    elif 'password' not in request_input:
+        return 'password missing!', 400
+
+    if delete_client_from_db(request_input):
+        return '', 204
+    else:
+        return 'Required client not found', 404
