@@ -19,8 +19,8 @@ CREATE TABLE generic_shelf (
 
 CREATE TABLE clients (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  username TEXT(50) NOT NULL,
-  email TEXT(50) NOT NULL,
+  username TEXT(50) UNIQUE NOT NULL,
+  email TEXT(50) UNIQUE NOT NULL,
   password TEXT(128) NOT NULL
 );
 
