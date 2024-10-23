@@ -19,13 +19,14 @@ class ItemsInterface:
         else:
             return None
 
-    def get_store_items(self):
+    @classmethod
+    def get_store_items(cls):
         store_items = {}
 
-        items_map = self.get_items_id_map()
+        items_map = cls.get_items_id_map()
         if items_map:
             for key in items_map.keys():
-                item_info = self.get_item_info(key)
+                item_info = cls.get_item_info(key)
                 if item_info:
                     store_items[key] = item_info
 
@@ -76,3 +77,39 @@ class UserInterface:
             return True
 
         return False
+
+    @staticmethod
+    def get_user_info(user_id):
+        resp = requests.get(f"http://127.0.0.1:5000/api/clients/{user_id}")
+        if resp.status_code == 200:
+            return dict(resp.json())
+        else:
+            return None
+
+    @staticmethod
+    def get_users_list():
+        resp = requests.get('http://127.0.0.1:5000/api/clients')
+        if resp.status_code == 200:
+            return dict(resp.json())
+        else:
+            return None
+
+    @classmethod
+    def get_user(cls, username='', email=''):
+        users_list = cls.get_users_list()
+        if users_list:
+            for user_id in users_list.keys():
+                list_user_username = users_list[user_id]['username']
+                list_user_email = users_list[user_id]['email']
+
+                if username == list_user_username or email == list_user_email:
+                    user_info = cls.get_user_info(user_id)
+                    if user_info:
+                        from flaskr.user import User
+                        user = User(user_info['id'],
+                                    user_info['username'],
+                                    user_info['email'],
+                                    user_info['password'],
+                                    )
+                        return user
+        return None
