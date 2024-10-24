@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flaskr.forms import RegistrationForm, LoginForm
 from flaskr.api_interface import UserInterface
-from flask_login import UserMixin
+from flask_login import UserMixin, login_user, logout_user, login_required
 
 bp = Blueprint('user', __name__, url_prefix='/user')
 
@@ -19,13 +19,10 @@ def register_request():
         # Add here register procedure
         pwd_hash = generate_password_hash(register_form.password.data)
 
-        new_user = {
-            "username": register_form.username.data,
-            "email": register_form.email.data,
-            "password": pwd_hash
-        }
+        username = register_form.username.data,
+        email = register_form.email.data,
 
-        call_status = UserInterface.add_user(new_user)
+        call_status = UserInterface.add_user(username, email, pwd_hash)
         if not call_status:
             flash("Not able to add new user!")
         else:
@@ -47,12 +44,30 @@ def login_request():
         # Add here login authentication
         user = UserInterface.get_user(username=login_form.username.data)
         if check_password_hash(user.password, login_form.password.data):
+            login_user(user)
+
             return redirect(url_for('main_page'))
         else:
             flash("Invalid login data!")
 
     return redirect(url_for('user.login_view'))
 
+@bp.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('main_page'))
+
+def get_user(user_id):
+    resp = UserInterface.get_user_info(user_id)
+    if resp:
+        username = resp['username']
+        email = resp['email']
+        pwd = resp['password']
+        user = User(user_id, username, email, pwd)
+        return user
+
+    return None
 
 class User(UserMixin):
 
@@ -61,4 +76,3 @@ class User(UserMixin):
         self.username = username
         self.email= email
         self.password = password
-
