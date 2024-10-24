@@ -1,7 +1,7 @@
 
 from flask import Blueprint, request, render_template, redirect, url_for
+from flask_login import login_required, current_user
 from flaskr.api_interface import ItemsInterface
-
 from flaskr.forms import CommentForm, RentItemForm, ReturnItemForm
 
 bp = Blueprint('store', __name__, url_prefix='/store')
@@ -16,6 +16,7 @@ def store():
 
 
 @bp.route('/<int:id>', methods=['GET', 'POST'])
+@login_required
 def product_view(id):
     comment_form = CommentForm()
     rent_form = RentItemForm()
@@ -26,9 +27,9 @@ def product_view(id):
             comments.append(comment_form.new_comment.data)
             comment_form.new_comment.data = None
         elif rent_form.validate_on_submit() and rent_form.rent_item.data:
-            ItemsInterface.rent_item(id)
+            ItemsInterface.rent_item(id, current_user.id)
         elif return_form.validate_on_submit() and return_form.return_item.data:
-            ItemsInterface.return_item(id)
+            ItemsInterface.return_item(id, current_user.id)
 
         return redirect(url_for('store.product_view', id = id))
 
