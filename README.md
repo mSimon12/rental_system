@@ -30,12 +30,16 @@ The evolution of this project follows the sequence described below:
 5. Manager page was inserted for store management.
 6. API interface have been implemented to decouple and translate calls made in the Frontend to the Backend.
 7. Implemented rent and return buttons in store/item
+8. Track on database who rented what
+9. Implement use credentials management
 
 
 ### To-Do: 
-* Track who rented each item
-* Implement Login authentication
+* Implement authentications
 * Save comments added on item page
+* Add tests
+* create pipeline
+* Deploy the application
 
 ## System view
 
