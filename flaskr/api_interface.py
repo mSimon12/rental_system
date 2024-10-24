@@ -45,16 +45,18 @@ class ItemsInterface:
         pass
 
     @staticmethod
-    def rent_item(item_id) -> bool:
-        resp = requests.put(f"http://127.0.0.1:5000/api/items/{item_id}/rent")
+    def rent_item(item_id, client_id) -> bool:
+        req_msg = { "client_id": client_id }
+        resp = requests.put(f"http://127.0.0.1:5000/api/items/{item_id}/rent", json=req_msg)
         if resp.status_code == 204:
             return True
         else:
             return False
 
     @staticmethod
-    def return_item(item_id) -> bool:
-        resp = requests.put(f"http://127.0.0.1:5000/api/items/{item_id}/return")
+    def return_item(item_id, client_id) -> bool:
+        req_msg = { "client_id": client_id }
+        resp = requests.put(f"http://127.0.0.1:5000/api/items/{item_id}/return", json=req_msg)
         if resp.status_code == 204:
             return True
         else:
@@ -63,7 +65,12 @@ class ItemsInterface:
 class UserInterface:
 
     @staticmethod
-    def add_user(new_user) -> bool:
+    def add_user(username, email, password) -> bool:
+        new_user = {
+            "username": username,
+            "email": email,
+            "password": password
+        }
         resp = requests.post('http://127.0.0.1:5000/api/clients/add', json=new_user)
         if resp.status_code == 201:
             return True
