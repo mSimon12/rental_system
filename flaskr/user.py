@@ -19,8 +19,8 @@ def register_request():
         # Add here register procedure
         pwd_hash = generate_password_hash(register_form.password.data)
 
-        username = register_form.username.data,
-        email = register_form.email.data,
+        username = register_form.username.data
+        email = register_form.email.data
 
         call_status = UserInterface.add_user(username, email, pwd_hash)
         if not call_status:
