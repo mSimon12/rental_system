@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flaskr.api.db import get_db
-from flaskr.api.clients_items import item_rented_by_client, item_returned_by_client
+from flaskr.api.clients_items import item_rented_by_client, item_returned_by_client, get_rent_id
+from flaskr.api.clients import check_client_by_id
 
 bp = Blueprint('api-items', __name__, url_prefix='/api/items')
 
@@ -218,12 +219,15 @@ def rent_item_request(item_id):
         return 'Bad data', 400
     client_id = request_input['client_id']
 
-    if not item_rented_by_client(item_id, client_id):
-        return 'Error updating the item_client database', 409
+    status, info = check_client_by_id(client_id)
+    if not status:
+        return 'Required client not found', 400
 
     status, er_msg = pop_item_from_db(item_id)
-
     if status:
+        if not item_rented_by_client(item_id, client_id):
+            return 'Error updating the item_client database', 409
+
         return '', 204
     else:
         return er_msg, 404
@@ -236,12 +240,18 @@ def return_item_request(item_id):
         return 'Bad data', 400
     client_id = request_input['client_id']
 
-    if not item_returned_by_client(item_id, client_id):
-        return 'Error updating the item_client database', 409
+    status, info = check_client_by_id(client_id)
+    if not status:
+        return 'Required client not found', 400
+
+    rent_id = get_rent_id(item_id,client_id)
+    if rent_id is None:
+        return 'No open rent for required return!', 400
 
     status, er_msg = append_item_to_db(item_id)
-
     if status:
+        if not item_returned_by_client(rent_id):
+            return 'Error updating the item_client database', 409
         return '', 204
     else:
         return er_msg, 404

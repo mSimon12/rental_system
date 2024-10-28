@@ -3,7 +3,7 @@ import logging
 from flask import Blueprint, current_app, request, jsonify, flash, render_template, url_for, redirect
 from logging import Logger
 from flaskr.forms import AddItemForm
-from flaskr.api_interface import get_store_items, add_new_item_to_store
+from flaskr.api_interface import ItemsInterface
 
 
 logger = Logger('manager', level='DEBUG')
@@ -24,13 +24,13 @@ def manager():
             "stock": add_item_form.stock.data
         }
 
-        call_status = add_new_item_to_store(api_request)
+        call_status = ItemsInterface.add_new_item_to_store(api_request)
         if not call_status:
             print("Not able to add new item!")
         else:
             return redirect(url_for('manager.manager'))
 
-    items = get_store_items()
+    items = ItemsInterface.get_store_items()
 
     return render_template("manager.html",
                            template_items = items,
