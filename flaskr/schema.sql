@@ -19,9 +19,9 @@ CREATE TABLE generic_shelf (
 
 CREATE TABLE clients (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  first_name TEXT NOT NULL,
-  last_name TEXT NOT NULL,
-  age INTEGER
+  username TEXT(50) UNIQUE NOT NULL,
+  email TEXT(50) UNIQUE NOT NULL,
+  password TEXT(128) NOT NULL
 );
 
 CREATE TABLE items_rent_control (

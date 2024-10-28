@@ -1,15 +1,16 @@
 from flask import Flask, render_template
 import os
 
-from . import store, shelf_manager
+from . import store, shelf_manager, user
 from flaskr.api import clients, items, db
+from flask_login import LoginManager
 
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
 
     app.config.from_mapping(
-        SECRET_KEY='dev',
+        SECRET_KEY='dev123_@',
         DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
     )
 
@@ -32,11 +33,20 @@ def create_app(test_config=None):
 
     db.init_app(app)
 
+    login_manager = LoginManager()
+    login_manager.login_view = 'user.login_view'
+    login_manager.init_app(app)
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return user.get_user(user_id)
+
     # Add store API
     app.register_blueprint(items.bp)
 
     app.register_blueprint(shelf_manager.bp)
     app.register_blueprint(store.bp)
     app.register_blueprint(clients.bp)
+    app.register_blueprint(user.bp)
 
     return app
