@@ -81,11 +81,15 @@ def add_client():
     request_input = request.get_json()
 
     if 'username' not in request_input:
-        return 'username missing!', 400
+        return 'Username missing!', 400
     elif 'password' not in request_input:
-        return 'password missing!', 400
+        return 'Password missing!', 400
     elif 'email' not in request_input:
-        return 'email missing!', 400
+        return 'Email missing!', 400
+    elif ((type(request_input['username']) != str) or
+            (type(request_input['email']) != str) or
+            (type(request_input['password']) != str)):
+        return 'Invalid data type!', 400
 
     already_client, info = check_client_by_username(request_input['username'])
 
