@@ -13,10 +13,10 @@ item_pattern = {
 
 
 def validate_input(req_input, pattern):
-    for req_key in req_input:
+    for key in item_pattern:
         try:
-            assert req_key in pattern.keys()
-            assert isinstance(req_input[req_key], pattern[req_key])
+            assert key in req_input.keys()
+            assert isinstance(req_input[key], pattern[key])
         except AssertionError:
             return False
 
