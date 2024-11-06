@@ -8,6 +8,7 @@ class TestApiClients:
                 'email': 'email@email.com',
                 'password': 'lsdjfjnasdldfdas12312knbwiuu3231uh13'}
 
+    # TEST GETTING CLIENTS LIST
     def test_get_clients_request(self, api_client):
         response = api_client.get('/api/clients/')
         assert response.status_code == 200
@@ -15,6 +16,7 @@ class TestApiClients:
         for item in response.json.keys():
             assert list(response.json[item].keys()) == ['email', 'username']
 
+    # TEST GETTING SPECIFIC CLIENT INFO
     def test_get_client_info(self, api_client):
         response = api_client.get('/api/clients/')
 
@@ -22,7 +24,7 @@ class TestApiClients:
             response = api_client.get(f'/api/clients/{client_id}')
             assert response.status_code == 200
 
-
+    # TESTS FOR CREATING NEW CLIENT
     def test_add_client_right_data(self, api_client, add_client_request):
         response = api_client.post('/api/clients/add', json=add_client_request)
         assert response.status_code == 201
@@ -74,10 +76,36 @@ class TestApiClients:
         response = api_client.post('/api/clients/add', json=add_client_request)
         assert response.status_code == 400
 
-    # def test_delete_client_request(self, api_client, add_client_request):
-    #     response = api_client.post('/api/clients/add', json=add_client_request)
-    #     assert response.status_code == 201
-    #
-    #     response2 = api_client.delete('/api/clients', json=add_client_request)
-    #     assert response2.status_code == 204
+    # TESTS FOR DELETING A CLIENT
+    def test_delete_client_request(self, api_client, add_client_request):
+        response = api_client.get('/api/clients/')
+        assert response.status_code == 200
+        initial_clients = response.json
 
+        response = api_client.post('/api/clients/add', json=add_client_request)
+        assert response.status_code == 201
+
+        response2 = api_client.delete('/api/clients/', json=add_client_request)
+        assert response2.status_code == 204
+
+        response = api_client.get('/api/clients/')
+        assert response.status_code == 200
+        assert initial_clients == response.json
+
+    def test_delete_client_missing_info(self, api_client, add_client_request):
+        response = api_client.post('/api/clients/add', json=add_client_request)
+        assert response.status_code == 201
+
+        # missing username
+        missing_req_data = {key:value for key, value in add_client_request.items() if key != 'username'}
+        response = api_client.delete('/api/clients/', json=missing_req_data)
+        assert response.status_code == 400
+
+        # missing password
+        missing_req_data = {key: value for key, value in add_client_request.items() if key != 'password'}
+        response = api_client.delete('/api/clients/', json=missing_req_data)
+        assert response.status_code == 400
+
+    def test_delete_client_invalid_user(self, api_client, add_client_request):
+        response = api_client.delete('/api/clients/', json=add_client_request)
+        assert response.status_code == 404
