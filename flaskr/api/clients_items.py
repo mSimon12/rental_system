@@ -1,17 +1,19 @@
 from flaskr.api.db import get_db
 from datetime import datetime
 
+
 def get_rent_id(item_id, client_id):
     db = get_db()
 
     rent_id = db.execute(
         'SELECT id FROM items_rent_control WHERE item_id = ? AND client_id = ? AND return_date IS NULL',
-            (item_id, client_id),
+        (item_id, client_id),
     ).fetchone()
 
     if rent_id:
         return rent_id['id']
     return None
+
 
 def item_rented_by_client(item_id, client):
     db = get_db()
@@ -27,6 +29,7 @@ def item_rented_by_client(item_id, client):
         return False
     else:
         return True
+
 
 def item_returned_by_client(rent_id):
     db = get_db()

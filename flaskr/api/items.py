@@ -155,6 +155,7 @@ def append_item_to_db(item_id):
 ####################################################################################
 # API calls
 
+
 @bp.route('/')
 def get_items_request():
     db = get_db()
@@ -244,7 +245,7 @@ def return_item_request(item_id):
     if not status:
         return 'Required client not found', 400
 
-    rent_id = get_rent_id(item_id,client_id)
+    rent_id = get_rent_id(item_id, client_id)
     if rent_id is None:
         return 'No open rent for required return!', 400
 

@@ -1,6 +1,6 @@
 import logging
 
-from flask import Blueprint, current_app, request, jsonify, flash, render_template, url_for, redirect
+from flask import Blueprint, request, render_template, url_for, redirect
 from logging import Logger
 from flaskr.forms import AddItemForm
 from flaskr.api_interface import ItemsInterface
@@ -33,6 +33,5 @@ def manager():
     items = ItemsInterface.get_store_items()
 
     return render_template("manager.html",
-                           template_items = items,
-                           template_add_item = add_item_form)
-
+                           template_items=items,
+                           template_add_item=add_item_form)

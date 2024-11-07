@@ -1,16 +1,17 @@
 import pytest
 
+
 class TestApiItems:
 
     @pytest.fixture
     def item_request_data(self):
         return {"item": "Lord of the Rings 1",
                 "description": "The Ring Society",
-                "stock": 8 }
+                "stock": 8}
 
     @pytest.fixture
     def client_request_data(self):
-        return {'client_id': 1 }
+        return {'client_id': 1}
 
     # TEST GETTING ITEMS LIST
     def test_get_items_request(self, api_client):
@@ -45,7 +46,7 @@ class TestApiItems:
 
     def test_add_item_missing_info(self, api_client, item_request_data):
         # missing item name
-        missing_req_data = {key:value for key, value in item_request_data.items() if key != 'item'}
+        missing_req_data = {key: value for key, value in item_request_data.items() if key != 'item'}
         response = api_client.post('/api/items/', json=missing_req_data)
         assert response.status_code == 400
 
@@ -110,7 +111,7 @@ class TestApiItems:
         assert response.status_code == 201
 
         # missing item name
-        missing_req_data = {key:value for key, value in item_request_data.items() if key != 'item'}
+        missing_req_data = {key: value for key, value in item_request_data.items() if key != 'item'}
         response = api_client.delete('/api/items/', json=missing_req_data)
         assert response.status_code == 400
 
@@ -127,14 +128,13 @@ class TestApiItems:
         assert response.status_code == 204
 
         response = api_client.get('/api/items/1')
-        new_availability  = response.json['available']
+        new_availability = response.json['available']
 
         assert new_availability == available_in_stock - 1
 
     def test_rent_item_missing_client_info(self, api_client):
         response = api_client.put('/api/items/1/rent', json={})
         assert response.status_code == 400
-
 
     # TESTS FOR RETURNING AN ITEM
     def test_return_item_valid_data(self, api_client, client_request_data):
@@ -148,7 +148,7 @@ class TestApiItems:
         assert response.status_code == 204
 
         response = api_client.get('/api/items/1')
-        new_availability  = response.json['available']
+        new_availability = response.json['available']
 
         assert new_availability == available_in_stock
 
