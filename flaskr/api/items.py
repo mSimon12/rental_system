@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flaskr.api.db import get_db
 from flaskr.api.clients_items import item_rented_by_client, item_returned_by_client, get_rent_id
-from flaskr.api.clients import check_client_by_id
+from flaskr.api.users import check_client_by_id
 
 bp = Blueprint('api-items', __name__, url_prefix='/api/items')
 
