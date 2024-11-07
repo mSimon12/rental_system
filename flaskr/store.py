@@ -5,8 +5,8 @@ from flaskr.api_interface import ItemsInterface
 from flaskr.forms import CommentForm, RentItemForm, ReturnItemForm
 
 bp = Blueprint('store', __name__, url_prefix='/store')
-
 comments = []
+
 
 @bp.route('/')
 def store():
