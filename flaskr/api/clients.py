@@ -87,7 +87,7 @@ def add_client():
         return 'Password missing!', 400
     elif 'email' not in request_input:
         return 'Email missing!', 400
-    elif ( not isinstance(request_input['username'], str) or
+    elif (not isinstance(request_input['username'], str) or
           not isinstance(request_input['email'], str) or
           not isinstance(request_input['password'], str)):
         return 'Invalid data type!', 400
