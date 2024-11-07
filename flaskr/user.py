@@ -6,10 +6,12 @@ from flask_login import UserMixin, login_user, logout_user, login_required
 
 bp = Blueprint('user', __name__, url_prefix='/user')
 
+
 @bp.route('/register')
 def register_view():
     register_form = RegistrationForm()
     return render_template('registration.html', title='Register', form=register_form)
+
 
 @bp.route('/register', methods=['POST'])
 def register_request():
@@ -29,6 +31,7 @@ def register_request():
             return redirect(url_for('user.login_view'))
 
     return redirect(url_for('user.register_view'))
+
 
 @bp.route('/login')
 def login_view():
@@ -52,11 +55,13 @@ def login_request():
 
     return redirect(url_for('user.login_view'))
 
+
 @bp.route("/logout")
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('main_page'))
+
 
 def get_user(user_id):
     resp = UserInterface.get_user_info(user_id)
@@ -69,10 +74,11 @@ def get_user(user_id):
 
     return None
 
+
 class User(UserMixin):
 
     def __init__(self, id, username, email, password):
         self.id = id
         self.username = username
-        self.email= email
+        self.email = email
         self.password = password

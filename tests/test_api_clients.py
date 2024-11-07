@@ -1,5 +1,6 @@
 import pytest
 
+
 class TestApiClients:
 
     @pytest.fixture
@@ -40,7 +41,7 @@ class TestApiClients:
 
     def test_add_client_missing_info(self, api_client, client_request_data):
         # missing username
-        missing_req_data = {key:value for key, value in client_request_data.items() if key != 'username'}
+        missing_req_data = {key: value for key, value in client_request_data.items() if key != 'username'}
         response = api_client.post('/api/clients/add', json=missing_req_data)
         assert response.status_code == 400
 
@@ -97,7 +98,7 @@ class TestApiClients:
         assert response.status_code == 201
 
         # missing username
-        missing_req_data = {key:value for key, value in client_request_data.items() if key != 'username'}
+        missing_req_data = {key: value for key, value in client_request_data.items() if key != 'username'}
         response = api_client.delete('/api/clients/', json=missing_req_data)
         assert response.status_code == 400
 

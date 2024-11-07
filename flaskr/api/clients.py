@@ -3,6 +3,7 @@ from flaskr.api.db import get_db
 
 bp = Blueprint('api-clients', __name__, url_prefix='/api/clients')
 
+
 def check_client_by_id(client_id):
     db = get_db()
 
@@ -55,7 +56,7 @@ def delete_client_from_db(client_info):
 
     client = db.execute(
         'SELECT * FROM clients WHERE username = ? AND password = ?',
-        (username,password)
+        (username, password)
     ).fetchone()
 
     if client:
@@ -76,7 +77,7 @@ def delete_client_from_db(client_info):
 # API calls
 
 
-@bp.route('/add', methods = ['POST'])
+@bp.route('/add', methods=['POST'])
 def add_client():
     request_input = request.get_json()
 
@@ -86,9 +87,9 @@ def add_client():
         return 'Password missing!', 400
     elif 'email' not in request_input:
         return 'Email missing!', 400
-    elif ((type(request_input['username']) != str) or
-            (type(request_input['email']) != str) or
-            (type(request_input['password']) != str)):
+    elif ( not isinstance(request_input['username'], str) or
+          not isinstance(request_input['email'], str) or
+          not isinstance(request_input['password'], str)):
         return 'Invalid data type!', 400
 
     already_client, info = check_client_by_username(request_input['username'])
