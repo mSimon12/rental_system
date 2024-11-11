@@ -1,7 +1,18 @@
+DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS shelves;
 DROP TABLE IF EXISTS generic_shelf;
-DROP TABLE IF EXISTS clients;
+DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS items_rent_control;
+
+CREATE TABLE roles (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  role TEXT(50) UNIQUE NOT NULL
+);
+
+INSERT INTO roles (id, role) VALUES
+    (0, "Admin"),
+    (1, "Employee"),
+    (2, "Client");
 
 CREATE TABLE shelves (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -17,11 +28,13 @@ CREATE TABLE generic_shelf (
   available INTEGER
 );
 
-CREATE TABLE clients (
+CREATE TABLE users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT(50) UNIQUE NOT NULL,
   email TEXT(50) UNIQUE NOT NULL,
-  password TEXT(128) NOT NULL
+  password TEXT(128) NOT NULL,
+  role_id INTEGER NOT NULL,
+  FOREIGN KEY (role_id) REFERENCES roles(id)
 );
 
 CREATE TABLE items_rent_control (

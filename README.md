@@ -32,13 +32,14 @@ The evolution of this project follows the sequence described below:
 7. Implemented rent and return buttons in store/item
 8. Track on database who rented what
 9. Implement use credentials management
+10. Added unit test for client and items APIs
+11. Create initial pipeline for continuous test at push
+12. Implemented role based authentication
 
 
 ### To-Do: 
-* Implement authentications
+* Add Flask-Admin for better admin management
 * Save comments added on item page
-* Add tests
-* create pipeline
 * Deploy the application
 
 ## System view
