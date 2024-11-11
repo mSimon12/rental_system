@@ -87,14 +87,6 @@ class UserInterface:
         return False
 
     @staticmethod
-    def get_user_info(user_id):
-        resp = requests.get(f"http://127.0.0.1:5000/api/clients/{user_id}")
-        if resp.status_code == 200:
-            return dict(resp.json())
-        else:
-            return None
-
-    @staticmethod
     def get_users_list():
         resp = requests.get('http://127.0.0.1:5000/api/clients')
         if resp.status_code == 200:
@@ -102,8 +94,24 @@ class UserInterface:
         else:
             return None
 
+    @staticmethod
+    def get_user_by_id(user_id):
+        resp = requests.get(f"http://127.0.0.1:5000/api/clients/{user_id}")
+        if resp.status_code == 200:
+            user_info = dict(resp.json())
+            from flaskr.user import User
+            user = User(user_info['id'],
+                        user_info['username'],
+                        user_info['email'],
+                        user_info['password'],
+                        user_info['role'],
+                        )
+            return user
+        else:
+            return None
+
     @classmethod
-    def get_user(cls, username='', email=''):
+    def get_user_match(cls, username='', email=''):
         users_list = cls.get_users_list()
         if users_list:
             for user_id in users_list.keys():
@@ -111,13 +119,5 @@ class UserInterface:
                 list_user_email = users_list[user_id]['email']
 
                 if username == list_user_username or email == list_user_email:
-                    user_info = cls.get_user_info(user_id)
-                    if user_info:
-                        from flaskr.user import User
-                        user = User(user_info['id'],
-                                    user_info['username'],
-                                    user_info['email'],
-                                    user_info['password'],
-                                    )
-                        return user
+                    return cls.get_user_by_id(user_id)
         return None
