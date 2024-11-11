@@ -13,7 +13,7 @@ class TestApiClients:
     def test_get_clients_request(self, api_client):
         response = api_client.get('/api/clients/')
         assert response.status_code == 200
-        assert len(response.json) == 2
+        assert len(response.json) == 3  # There is one extra user automatically added (Admin)
         for client_id in response.json.keys():
             assert list(response.json[client_id].keys()) == ['email', 'username']
 
