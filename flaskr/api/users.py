@@ -13,7 +13,15 @@ def check_client_by_id(client_id):
     ).fetchone()
 
     if client_info:
-        return True, dict(client_info)
+        client_info = dict(client_info)
+        client_role = db.execute(
+            'SELECT role FROM roles WHERE id = ?',
+            (client_info['role_id'],)
+        ).fetchone()
+        client_info['role'] = dict(client_role)['role']
+        client_info.pop('role_id')
+
+        return True, client_info
     return False, client_info
 
 
