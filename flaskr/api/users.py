@@ -3,16 +3,25 @@ from flaskr.api.db import get_db
 
 bp = Blueprint('api-clients', __name__, url_prefix='/api/clients')
 
+
 def check_client_by_id(client_id):
     db = get_db()
 
     client_info = db.execute(
-        'SELECT * FROM clients WHERE id = ?',
+        'SELECT * FROM users WHERE id = ?',
         (client_id,)
     ).fetchone()
 
     if client_info:
-        return True, dict(client_info)
+        client_info = dict(client_info)
+        client_role = db.execute(
+            'SELECT role FROM roles WHERE id = ?',
+            (client_info['role_id'],)
+        ).fetchone()
+        client_info['role'] = dict(client_role)['role']
+        client_info.pop('role_id')
+
+        return True, client_info
     return False, client_info
 
 
@@ -20,7 +29,7 @@ def check_client_by_username(username):
     db = get_db()
 
     client_info = db.execute(
-        'SELECT * FROM clients WHERE username = ?',
+        'SELECT * FROM users WHERE username = ?',
         (username,)
     ).fetchone()
 
@@ -37,8 +46,8 @@ def add_new_client(client_info):
     db = get_db()
     try:
         db.execute(
-            "INSERT INTO clients (username, email, password) VALUES (?,?,?)",
-            (username, email, password)
+            "INSERT INTO users (username, email, password, role_id) VALUES (?,?,?,?)",
+            (username, email, password, 2)
         )
         db.commit()
     except db.Error:
@@ -54,14 +63,14 @@ def delete_client_from_db(client_info):
     db = get_db()
 
     client = db.execute(
-        'SELECT * FROM clients WHERE username = ? AND password = ?',
-        (username,password)
+        'SELECT * FROM users WHERE username = ? AND password = ?',
+        (username, password)
     ).fetchone()
 
     if client:
         try:
             db.execute(
-                "DELETE FROM clients WHERE id = ?",
+                "DELETE FROM users WHERE id = ?",
                 (client['id'],)
             )
             db.commit()
@@ -76,16 +85,20 @@ def delete_client_from_db(client_info):
 # API calls
 
 
-@bp.route('/add', methods = ['POST'])
+@bp.route('/add', methods=['POST'])
 def add_client():
     request_input = request.get_json()
 
     if 'username' not in request_input:
-        return 'username missing!', 400
+        return 'Username missing!', 400
     elif 'password' not in request_input:
-        return 'password missing!', 400
+        return 'Password missing!', 400
     elif 'email' not in request_input:
-        return 'email missing!', 400
+        return 'Email missing!', 400
+    elif (not isinstance(request_input['username'], str) or
+          not isinstance(request_input['email'], str) or
+          not isinstance(request_input['password'], str)):
+        return 'Invalid data type!', 400
 
     already_client, info = check_client_by_username(request_input['username'])
 
@@ -102,17 +115,17 @@ def add_client():
 def get_clients_request():
     db = get_db()
 
-    clients = db.execute(
-        'SELECT id,username,email FROM clients'
+    users = db.execute(
+        'SELECT id,username,email FROM users'
     ).fetchall()
 
-    if clients:
-        clients_dict = {}
-        for client in clients:
-            clients_dict[client["id"]] = {"username": client["username"], "email": client["email"]}
-        return jsonify(clients_dict), 200
+    if users:
+        users_dict = {}
+        for user in users:
+            users_dict[user["id"]] = {"username": user["username"], "email": user["email"]}
+        return jsonify(users_dict), 200
     else:
-        return 'No clients registered', 200
+        return 'No users registered', 200
 
 
 @bp.route('/<int:client_id>')

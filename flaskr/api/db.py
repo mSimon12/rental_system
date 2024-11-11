@@ -1,6 +1,7 @@
 import sqlite3
 import click
 from flask import Flask, current_app, g
+from werkzeug.security import generate_password_hash
 
 
 def get_db():
@@ -19,6 +20,12 @@ def init_db():
 
     with current_app.open_resource("schema.sql") as f:
         db.executescript(f.read().decode('utf8'))
+
+    db.execute(
+        "INSERT INTO users (username, email, password, role_id) VALUES (?,?,?,?)",
+        ('Admin', 'admin@admin.com', generate_password_hash('admin'), 0)
+    )
+    db.commit()
 
 
 def close_db(e=None):

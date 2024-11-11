@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flaskr.api.db import get_db
 from flaskr.api.clients_items import item_rented_by_client, item_returned_by_client, get_rent_id
-from flaskr.api.clients import check_client_by_id
+from flaskr.api.users import check_client_by_id
 
 bp = Blueprint('api-items', __name__, url_prefix='/api/items')
 
@@ -13,10 +13,10 @@ item_pattern = {
 
 
 def validate_input(req_input, pattern):
-    for req_key in req_input:
+    for key in item_pattern:
         try:
-            assert req_key in pattern.keys()
-            assert isinstance(req_input[req_key], pattern[req_key])
+            assert key in req_input.keys()
+            assert isinstance(req_input[key], pattern[key])
         except AssertionError:
             return False
 
@@ -155,6 +155,7 @@ def append_item_to_db(item_id):
 ####################################################################################
 # API calls
 
+
 @bp.route('/')
 def get_items_request():
     db = get_db()
@@ -244,7 +245,7 @@ def return_item_request(item_id):
     if not status:
         return 'Required client not found', 400
 
-    rent_id = get_rent_id(item_id,client_id)
+    rent_id = get_rent_id(item_id, client_id)
     if rent_id is None:
         return 'No open rent for required return!', 400
 

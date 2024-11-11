@@ -2,14 +2,17 @@ from flask import Blueprint, render_template, redirect, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flaskr.forms import RegistrationForm, LoginForm
 from flaskr.api_interface import UserInterface
-from flask_login import UserMixin, login_user, logout_user, login_required
+from flask_login import UserMixin, login_user, logout_user, login_required, current_user
+from functools import wraps
 
 bp = Blueprint('user', __name__, url_prefix='/user')
+
 
 @bp.route('/register')
 def register_view():
     register_form = RegistrationForm()
     return render_template('registration.html', title='Register', form=register_form)
+
 
 @bp.route('/register', methods=['POST'])
 def register_request():
@@ -30,6 +33,7 @@ def register_request():
 
     return redirect(url_for('user.register_view'))
 
+
 @bp.route('/login')
 def login_view():
     login_form = LoginForm()
@@ -42,7 +46,7 @@ def login_request():
 
     if login_form.validate_on_submit():
         # Add here login authentication
-        user = UserInterface.get_user(username=login_form.username.data)
+        user = UserInterface.get_user_match(username=login_form.username.data)
         if check_password_hash(user.password, login_form.password.data):
             login_user(user)
 
@@ -52,27 +56,31 @@ def login_request():
 
     return redirect(url_for('user.login_view'))
 
+
 @bp.route("/logout")
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('main_page'))
 
-def get_user(user_id):
-    resp = UserInterface.get_user_info(user_id)
-    if resp:
-        username = resp['username']
-        email = resp['email']
-        pwd = resp['password']
-        user = User(user_id, username, email, pwd)
-        return user
 
-    return None
+# Authorization decorator for roles
+def role_required(role):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if not current_user.is_authenticated or str.lower(current_user.role) != str.lower(role):
+                return "error': Access denied", 403
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
+
 
 class User(UserMixin):
 
-    def __init__(self, id, username, email, password):
+    def __init__(self, id, username, email, password, role):
         self.id = id
         self.username = username
-        self.email= email
+        self.email = email
         self.password = password
+        self.role = role
