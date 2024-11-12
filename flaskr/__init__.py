@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+from dotenv import load_dotenv
 import os
 
 from . import store, shelf_manager, user
@@ -9,8 +10,10 @@ from flaskr.api_interface import UserInterface
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
 
+    load_dotenv()
+
     app.config.from_mapping(
-        SECRET_KEY='dev123_@',
+        SECRET_KEY= os.getenv("API_SECRET"),
         DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
     )
 
