@@ -72,7 +72,7 @@ class UserInterface:
             "email": email,
             "password": password
         }
-        resp = requests.post('http://127.0.0.1:5000/api/clients/add', json=new_user)
+        resp = requests.post('http://127.0.0.1:5000//api/users', json=new_user)
         if resp.status_code == 201:
             return True
 
@@ -80,7 +80,7 @@ class UserInterface:
 
     @staticmethod
     def delete_user(user_info) -> bool:
-        resp = requests.post('http://127.0.0.1:5000/api/clients', json=user_info)
+        resp = requests.post('http://127.0.0.1:5000//api/users', json=user_info)
         if resp.status_code == 204:
             return True
 
@@ -88,7 +88,7 @@ class UserInterface:
 
     @staticmethod
     def get_users_list():
-        resp = requests.get('http://127.0.0.1:5000/api/clients')
+        resp = requests.get('http://127.0.0.1:5000//api/users')
         if resp.status_code == 200:
             return dict(resp.json())
         else:
@@ -96,7 +96,7 @@ class UserInterface:
 
     @staticmethod
     def get_user_by_id(user_id):
-        resp = requests.get(f"http://127.0.0.1:5000/api/clients/{user_id}")
+        resp = requests.get(f"http://127.0.0.1:5000//api/users/{user_id}")
         if resp.status_code == 200:
             user_info = dict(resp.json())
             from flaskr.user import User

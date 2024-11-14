@@ -17,7 +17,6 @@ def register_view():
 @bp.route('/register', methods=['POST'])
 def register_request():
     register_form = RegistrationForm()
-
     if register_form.validate_on_submit():
         # Add here register procedure
         pwd_hash = generate_password_hash(register_form.password.data)
@@ -43,11 +42,11 @@ def login_view():
 @bp.route('/login', methods=['POST'])
 def login_request():
     login_form = LoginForm()
-
     if login_form.validate_on_submit():
         # Add here login authentication
         user = UserInterface.get_user_match(username=login_form.username.data)
         if check_password_hash(user.password, login_form.password.data):
+            # TODO: Login user must be in backend
             login_user(user)
 
             return redirect(url_for('main_page'))
@@ -60,6 +59,7 @@ def login_request():
 @bp.route("/logout")
 @login_required
 def logout():
+    # TODO: Logout user must be in backend
     logout_user()
     return redirect(url_for('main_page'))
 

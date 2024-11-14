@@ -2,8 +2,11 @@ from flask import Flask, render_template
 from dotenv import load_dotenv
 import os
 
+# Backend
+from flaskr.api.controllers import users
+
 from . import store, shelf_manager, user
-from flaskr.api import users, items, db
+from flaskr.api import items, db
 from flask_login import LoginManager
 from flaskr.api_interface import UserInterface
 
