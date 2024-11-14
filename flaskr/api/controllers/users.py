@@ -32,7 +32,7 @@ def add_user():
         return 'Invalid data type!', 400
 
     service = UsersService()
-    user_exists = service.verify_user_match(request_input['username'])
+    user_exists = service.verify_user_match(username=request_input['username'])
 
     if user_exists:
         return f"Username {request_input['username']} is already registered.", 400
