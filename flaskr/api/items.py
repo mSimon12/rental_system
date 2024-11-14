@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flaskr.api.db import get_db
 from flaskr.api.clients_items import item_rented_by_client, item_returned_by_client, get_rent_id
-from flaskr.api.users import check_client_by_id
+from flaskr.api.services.users import UsersService
 
 bp = Blueprint('api-items', __name__, url_prefix='/api/items')
 
@@ -172,6 +172,7 @@ def get_items_request():
 
 
 @bp.route('/', methods=['POST'])
+# TODO: require login here and role
 def add_item_request():
 
     request_input = request.get_json()
@@ -190,6 +191,7 @@ def add_item_request():
 
 
 @bp.route('/', methods=['DELETE'])
+# TODO: require login here and role
 def delete_item_request():
     request_input = request.get_json()
 
@@ -211,7 +213,7 @@ def get_item_info(item_id):
     else:
         return 'Required item not found', 404
 
-
+# TODO: require login here
 @bp.route('/<int:item_id>/rent', methods=['PUT'])
 def rent_item_request(item_id):
     request_input = request.get_json()
@@ -220,7 +222,8 @@ def rent_item_request(item_id):
         return 'Bad data', 400
     client_id = request_input['client_id']
 
-    status, info = check_client_by_id(client_id)
+    service = UsersService()
+    status = service.verify_user_match(user_id=client_id)
     if not status:
         return 'Required client not found', 400
 
@@ -233,7 +236,7 @@ def rent_item_request(item_id):
     else:
         return er_msg, 404
 
-
+# TODO: require login here
 @bp.route('/<int:item_id>/return', methods=['PUT'])
 def return_item_request(item_id):
     request_input = request.get_json()
@@ -241,7 +244,8 @@ def return_item_request(item_id):
         return 'Bad data', 400
     client_id = request_input['client_id']
 
-    status, info = check_client_by_id(client_id)
+    service = UsersService()
+    status = service.verify_user_match(user_id=client_id)
     if not status:
         return 'Required client not found', 400
 
