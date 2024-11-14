@@ -37,7 +37,6 @@ class Users:
 
     @staticmethod
     def add_user(user_info):
-        print(user_info)
         db = get_db()
         try:
             db.execute(
