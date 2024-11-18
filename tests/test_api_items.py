@@ -11,7 +11,7 @@ class TestApiItems:
 
     @pytest.fixture
     def client_request_data(self):
-        return {'client_id': 1}
+        return {'user_id': 1}
 
     # TEST GETTING ITEMS LIST
     def test_get_items_request(self, api_client):
