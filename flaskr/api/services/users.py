@@ -1,4 +1,7 @@
 from flaskr.api.models.users import Users
+from flaskr.api.models.roles import Roles
+from flask_login import UserMixin, login_user, logout_user, current_user
+from functools import wraps
 
 
 class UsersService:
@@ -66,3 +69,76 @@ class UsersService:
             return user_info
 
         return None
+
+    @staticmethod
+    def __check_credentials(username, password):
+        user_info = Users.query_user_by_username(username)
+
+        if user_info:
+            user_info = dict(user_info)
+            if user_info['password'] == password:
+                return user_info
+
+        return None
+
+    def login(self, username, password):
+        user_info = self.__check_credentials(username, password)
+        if user_info is not None:
+            user = User(user_info['id'],
+                        user_info['username'],
+                        user_info['email'],
+                        user_info['password'],
+                        user_info['role_id'],
+                        )
+
+            login_user(user)
+            return True
+        return False
+
+    @staticmethod
+    def logout():
+        logout_user()
+
+        if not current_user.is_authenticated:
+            return True
+
+        return False
+
+    @staticmethod
+    def role_required(role):
+        def decorator(f):
+            @wraps(f)
+            def decorated_function(*args, **kwargs):
+                if not current_user.is_authenticated or str.lower(current_user.role) != str.lower(role):
+                    return "error': Access denied", 403
+                return f(*args, **kwargs)
+
+            return decorated_function
+
+        return decorator
+
+    @staticmethod
+    def get_user(user_id):
+        user_info = Users.query_user_by_id(user_id)
+
+        if user_info:
+            user_info = dict(user_info)
+            user = User(user_info['id'],
+                        user_info['username'],
+                        user_info['email'],
+                        user_info['password'],
+                        user_info['role_id'],
+                        )
+            return user
+
+        return None
+
+
+class User(UserMixin):
+
+    def __init__(self, id, username, email, password, role_id):
+        self.id = id
+        self.username = username
+        self.email = email
+        self.password = password
+        self.role = Roles.query_role_name(role_id)

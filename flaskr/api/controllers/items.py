@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flaskr.api.services.items import ItemsService
 from flaskr.api.services.users import UsersService
 from flaskr.api.services.rentals import RentalsService
+from flask_login import login_required
 
 bp = Blueprint('api-items', __name__, url_prefix='/api/items')
 
@@ -18,6 +19,8 @@ def get_items():
 
 @bp.route('/', methods=['POST'])
 # TODO: require login here and role
+@login_required
+@UsersService.role_required('Admin')
 def add_item():
     request_input = request.get_json()
 
@@ -39,6 +42,8 @@ def add_item():
 
 @bp.route('/', methods=['DELETE'])
 # TODO: require login here and role
+@login_required
+@UsersService.role_required('Admin')
 def delete_item():
     request_input = request.get_json()
 
@@ -69,6 +74,7 @@ def get_item_info(item_id):
 
 # TODO: require login here
 @bp.route('/<int:item_id>/rent', methods=['PUT'])
+@login_required
 def rent_item(item_id):
     request_input = request.get_json()
 
@@ -98,6 +104,7 @@ def rent_item(item_id):
 
 # TODO: require login here
 @bp.route('/<int:item_id>/return', methods=['PUT'])
+@login_required
 def return_item(item_id):
     request_input = request.get_json()
 

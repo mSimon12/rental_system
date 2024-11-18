@@ -5,6 +5,7 @@ import os
 # Backend
 from flaskr.api.controllers import users
 from flaskr.api.controllers import items
+from flaskr.api.services.users import UsersService
 
 from . import store, shelf_manager, user
 from flaskr.api import db
@@ -41,12 +42,12 @@ def create_app(test_config=None):
     db.init_app(app)
 
     login_manager = LoginManager()
-    login_manager.login_view = 'user.login_view'
+    # login_manager.login_view = 'user.login_view'
     login_manager.init_app(app)
 
     @login_manager.user_loader
     def load_user(user_id):
-        return UserInterface.get_user_by_id(user_id)
+        return UsersService.get_user(user_id)
 
     # Add store API
     app.register_blueprint(items.bp)
