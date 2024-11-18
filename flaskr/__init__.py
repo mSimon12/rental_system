@@ -4,9 +4,10 @@ import os
 
 # Backend
 from flaskr.api.controllers import users
+from flaskr.api.controllers import items
 
 from . import store, shelf_manager, user
-from flaskr.api import items, db
+from flaskr.api import db
 from flask_login import LoginManager
 from flaskr.api_interface import UserInterface
 
