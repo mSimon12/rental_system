@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flaskr.api.services.users import UsersService
+from flask_login import login_required, current_user
 
 bp = Blueprint('api-users', __name__, url_prefix='/api/users')
 
@@ -83,11 +84,39 @@ def get_user_info(user_id):
 # TODO: implement login endpoint
 @bp.route('/login', methods=['POST'])
 def login_user():
-    pass
+    if current_user.is_authenticated:
+        return 'Some user already logged', 401
 
-# TODO: implement logout endpoint
-@bp.route('/logout', methods=['POST'])
-def logout_user():
-    pass
+    request_input = request.get_json()
 
-# TODO: create decorator for required auth here
+    if 'username' not in request_input:
+        return 'username missing!', 400
+    elif 'password' not in request_input:
+        return 'password missing!', 400
+
+    service = UsersService()
+    user_exists = service.verify_user_match(username=request_input['username'])
+
+    if not user_exists:
+        return 'Required user not found', 400
+
+    login_approved = service.login(request_input['username'], request_input['password'])
+    if login_approved:
+        return '', 200
+
+    return '', 400
+
+
+@bp.route('<int:user_id>/logout', methods=['POST'])
+def logout_user(user_id):
+    if current_user.is_authenticated:
+        if user_id == current_user.id:
+            service = UsersService()
+            if service.logout():
+                return '', 200
+            else:
+                return 'Failed to logout', 400
+        else:
+            return 'Required user is not logged in', 400
+
+    return 'No user authenticated', 400
