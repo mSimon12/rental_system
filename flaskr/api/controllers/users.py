@@ -77,7 +77,7 @@ def get_user_info(user_id):
         if user_info:
             return jsonify(user_info), 200
 
-    return '', 404
+    return 'Required user not found', 404
 
 
 # TODO: implement login endpoint

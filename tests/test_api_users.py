@@ -1,15 +1,15 @@
 import pytest
 
 
-class TestApiClients:
+class TestApiUsers:
 
     @pytest.fixture
     def client_request_data(self):
-        return {'username': 'new_client',
+        return {'username': 'new_user',
                 'email': 'email@email.com',
                 'password': 'lsdjfjnasdldfdas12312knbwiuu3231uh13'}
 
-    # TEST GETTING CLIENTS LIST
+    # TEST GETTING USERS LIST
     def test_get_clients_request(self, api_client):
         response = api_client.get('/api/users/')
         assert response.status_code == 200
@@ -17,7 +17,7 @@ class TestApiClients:
         for client_id in response.json.keys():
             assert list(response.json[client_id].keys()) == ['email', 'username']
 
-    # TEST GETTING SPECIFIC CLIENT INFO
+    # TEST GETTING SPECIFIC USER INFO
     def test_get_client_info(self, api_client):
         response = api_client.get('/api/users/')
 
@@ -25,7 +25,7 @@ class TestApiClients:
             response = api_client.get(f'/api/users/{client_id}')
             assert response.status_code == 200
 
-    # TESTS FOR CREATING NEW CLIENT
+    # TESTS FOR CREATING NEW USER
     def test_add_client_right_data(self, api_client, client_request_data):
         response = api_client.post('/api/users/', json=client_request_data)
         assert response.status_code == 201
@@ -77,7 +77,7 @@ class TestApiClients:
         response = api_client.post('/api/users/', json=client_request_data)
         assert response.status_code == 400
 
-    # TESTS FOR DELETING A CLIENT
+    # TESTS FOR DELETING A USER
     def test_delete_client_request(self, api_client, client_request_data):
         response = api_client.get('/api/users/')
         assert response.status_code == 200
