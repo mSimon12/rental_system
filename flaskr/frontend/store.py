@@ -1,8 +1,8 @@
 
 from flask import Blueprint, request, render_template, redirect, url_for
 from flask_login import login_required, current_user
-from flaskr.api_interface import ItemsInterface
-from flaskr.forms import CommentForm, RentItemForm, ReturnItemForm
+from flaskr.frontend.api_interface import ItemsInterface
+from flaskr.frontend.forms import CommentForm, RentItemForm, ReturnItemForm
 
 bp = Blueprint('store', __name__, url_prefix='/store')
 comments = []

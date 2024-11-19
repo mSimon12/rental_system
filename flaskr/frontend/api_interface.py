@@ -66,6 +66,23 @@ class ItemsInterface:
 class UserInterface:
 
     @staticmethod
+    def get_users_list():
+        resp = requests.get('http://127.0.0.1:5000//api/users')
+        if resp.status_code == 200:
+            return dict(resp.json())
+        else:
+            return None
+
+    @staticmethod
+    def get_user_by_id(user_id):
+        resp = requests.get(f"http://127.0.0.1:5000//api/users/{user_id}")
+        if resp.status_code == 200:
+            user_info = dict(resp.json())
+            return user_info
+        else:
+            return None
+
+    @staticmethod
     def add_user(username, email, password) -> bool:
         new_user = {
             "username": username,
@@ -87,37 +104,21 @@ class UserInterface:
         return False
 
     @staticmethod
-    def get_users_list():
-        resp = requests.get('http://127.0.0.1:5000//api/users')
+    def login_user(username, password) -> bool:
+        user_info = {
+            "username": username,
+            "password": password
+        }
+        resp = requests.post('http://127.0.0.1:5000//api/users/login', json=user_info)
         if resp.status_code == 200:
-            return dict(resp.json())
-        else:
-            return None
+            return True
+
+        return False
 
     @staticmethod
-    def get_user_by_id(user_id):
-        resp = requests.get(f"http://127.0.0.1:5000//api/users/{user_id}")
-        if resp.status_code == 200:
-            user_info = dict(resp.json())
-            from flaskr.user import User
-            user = User(user_info['id'],
-                        user_info['username'],
-                        user_info['email'],
-                        user_info['password'],
-                        user_info['role'],
-                        )
-            return user
-        else:
-            return None
+    def logout_user(user_id) -> bool:
+        resp = requests.post(f"http://127.0.0.1:5000//api/users/{user_id}/logout")
+        if resp.status_code == 204:
+            return True
 
-    @classmethod
-    def get_user_match(cls, username='', email=''):
-        users_list = cls.get_users_list()
-        if users_list:
-            for user_id in users_list.keys():
-                list_user_username = users_list[user_id]['username']
-                list_user_email = users_list[user_id]['email']
-
-                if username == list_user_username or email == list_user_email:
-                    return cls.get_user_by_id(user_id)
-        return None
+        return False

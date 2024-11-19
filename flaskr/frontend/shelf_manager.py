@@ -2,9 +2,9 @@ import logging
 
 from flask import Blueprint, request, render_template, url_for, redirect
 from logging import Logger
-from flaskr.forms import AddItemForm
-from flaskr.api_interface import ItemsInterface
-from flaskr.user import role_required
+from flaskr.frontend.forms import AddItemForm
+from flaskr.frontend.api_interface import ItemsInterface
+from flaskr.api.services.users import UsersService
 
 logger = Logger('manager', level='DEBUG')
 file_handler = logging.FileHandler("debug.log")
@@ -14,7 +14,7 @@ bp = Blueprint('manager', __name__, url_prefix='/manager')
 
 
 @bp.route("/", methods=['GET', 'POST'])
-@role_required('Admin')
+@UsersService.role_required('Admin')
 def manager():
     add_item_form = AddItemForm(request.form)
 
