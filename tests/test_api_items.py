@@ -13,6 +13,13 @@ class TestApiItems:
     def client_request_data(self):
         return {'user_id': 1}
 
+    @pytest.fixture
+    def login_admin_user(self, api_client):
+        login_request = {"username": "test",
+                         "password": "pbkdf2:sha256:50000$TCI4GzcX$0de171a4f4dac32e3364c7ddc7c14f3e2fa61f2d17574483f7ffbb431b4acb2f"
+                         }
+        api_client.post('/api/users/login', json=login_request)
+
     # TEST GETTING ITEMS LIST
     def test_get_items_request(self, api_client):
         response = api_client.get('/api/items/')
@@ -31,20 +38,20 @@ class TestApiItems:
             assert response.status_code == 200
 
     # TESTS FOR ADDING NEW ITEM
-    def test_add_item_right_data(self, api_client, item_request_data):
+    def test_add_item_right_data(self, api_client, item_request_data, login_admin_user):
         response = api_client.post('/api/items/', json=item_request_data)
         assert response.status_code == 201
 
         response = api_client.get('/api/items/')
         assert item_request_data['item'] in list(response.json.values())[-1]
 
-    def test_add_item_avoid_duplicated(self, api_client, item_request_data):
+    def test_add_item_avoid_duplicated(self, api_client, item_request_data, login_admin_user):
         response = api_client.post('/api/items/', json=item_request_data)
         assert response.status_code == 201
         response = api_client.post('/api/items/', json=item_request_data)
         assert response.status_code == 400
 
-    def test_add_item_missing_info(self, api_client, item_request_data):
+    def test_add_item_missing_info(self, api_client, item_request_data, login_admin_user):
         # missing item name
         missing_req_data = {key: value for key, value in item_request_data.items() if key != 'item'}
         response = api_client.post('/api/items/', json=missing_req_data)
@@ -60,7 +67,7 @@ class TestApiItems:
         response = api_client.post('/api/items/', json=missing_req_data)
         assert response.status_code == 400
 
-    def test_add_item_invalid_item_name(self, api_client, item_request_data):
+    def test_add_item_invalid_item_name(self, api_client, item_request_data, login_admin_user):
         # invalid item
         item_request_data['item'] = None
         response = api_client.post('/api/items/', json=item_request_data)
@@ -70,7 +77,7 @@ class TestApiItems:
         response = api_client.post('/api/items/', json=item_request_data)
         assert response.status_code == 400
 
-    def test_add_item_invalid_description(self, api_client, item_request_data):
+    def test_add_item_invalid_description(self, api_client, item_request_data, login_admin_user):
         # invalid description
         item_request_data['description'] = None
         response = api_client.post('/api/items/', json=item_request_data)
@@ -80,7 +87,7 @@ class TestApiItems:
         response = api_client.post('/api/items/', json=item_request_data)
         assert response.status_code == 400
 
-    def test_add_item_invalid_stock(self, api_client, item_request_data):
+    def test_add_item_invalid_stock(self, api_client, item_request_data, login_admin_user):
         # invalid stock
         item_request_data['stock'] = None
         response = api_client.post('/api/items/', json=item_request_data)
@@ -91,7 +98,7 @@ class TestApiItems:
         assert response.status_code == 400
 
     # TESTS FOR DELETING AN ITEM
-    def test_delete_item_request(self, api_client, item_request_data):
+    def test_delete_item_request(self, api_client, item_request_data, login_admin_user):
         response = api_client.get('/api/items/')
         assert response.status_code == 200
         initial_items = response.json
@@ -106,7 +113,7 @@ class TestApiItems:
         assert response.status_code == 200
         assert initial_items == response.json
 
-    def test_delete_item_missing_info(self, api_client, item_request_data):
+    def test_delete_item_missing_info(self, api_client, item_request_data, login_admin_user):
         response = api_client.post('/api/items/', json=item_request_data)
         assert response.status_code == 201
 
@@ -115,12 +122,12 @@ class TestApiItems:
         response = api_client.delete('/api/items/', json=missing_req_data)
         assert response.status_code == 400
 
-    def test_delete_item_invalid_item(self, api_client, item_request_data):
+    def test_delete_item_invalid_item(self, api_client, item_request_data, login_admin_user):
         response = api_client.delete('/api/items/', json=item_request_data)
         assert response.status_code == 404
 
     # TESTS FOR RENTING AN ITEM
-    def test_rent_item_valid_data(self, api_client, client_request_data):
+    def test_rent_item_valid_data(self, api_client, client_request_data, login_admin_user):
         response = api_client.get('/api/items/1')
         available_in_stock = response.json['available']
 
@@ -132,12 +139,12 @@ class TestApiItems:
 
         assert new_availability == available_in_stock - 1
 
-    def test_rent_item_missing_client_info(self, api_client):
+    def test_rent_item_missing_client_info(self, api_client, login_admin_user):
         response = api_client.put('/api/items/1/rent', json={})
         assert response.status_code == 400
 
     # TESTS FOR RETURNING AN ITEM
-    def test_return_item_valid_data(self, api_client, client_request_data):
+    def test_return_item_valid_data(self, api_client, client_request_data, login_admin_user):
         response = api_client.get('/api/items/1')
         available_in_stock = response.json['available']
 
@@ -152,10 +159,10 @@ class TestApiItems:
 
         assert new_availability == available_in_stock
 
-    def test_return_item_without_renting(self, api_client, client_request_data):
+    def test_return_item_without_renting(self, api_client, client_request_data, login_admin_user):
         response = api_client.put('/api/items/1/return', json=client_request_data)
         assert response.status_code == 400
 
-    def test_return_item_missing_client_info(self, api_client):
+    def test_return_item_missing_client_info(self, api_client, login_admin_user):
         response = api_client.put('/api/items/1/return', json={})
         assert response.status_code == 400
