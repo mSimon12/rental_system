@@ -1,16 +1,17 @@
 from flask import Flask, render_template
 from dotenv import load_dotenv
 import os
+from flask_login import LoginManager
 
 # Backend
+from flaskr.api import db
 from flaskr.api.controllers import users
 from flaskr.api.controllers import items
 from flaskr.api.services.users import UsersService
 
-from . import store, shelf_manager, user
-from flaskr.api import db
-from flask_login import LoginManager
-from flaskr.api_interface import UserInterface
+# Frontend
+from flaskr.frontend import user, store, shelf_manager
+
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
