@@ -15,7 +15,7 @@ def get_items():
     if items_dict:
         return jsonify(items_dict), 200
     else:
-        return 'No items registered', 200
+        return jsonify({}), 200
 
 @bp.route('/', methods=['POST'])
 # TODO: require login here and role
