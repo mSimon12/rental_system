@@ -1,7 +1,8 @@
+from flask_login import UserMixin, login_user, logout_user, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
+from functools import wraps
 from flaskr.api.models.users import Users
 from flaskr.api.models.roles import Roles
-from flask_login import UserMixin, login_user, logout_user, current_user
-from functools import wraps
 
 
 class UsersService:
@@ -38,7 +39,7 @@ class UsersService:
     def add_user(username, email, password):
         user_info = {'username': username,
                      'email': email,
-                     'password': password,
+                     'password': generate_password_hash(password),
                      'role_id': 2
         }
 
@@ -76,7 +77,8 @@ class UsersService:
 
         if user_info:
             user_info = dict(user_info)
-            if user_info['password'] == password:
+
+            if check_password_hash(user_info['password'], password):
                 return user_info
 
         return None
