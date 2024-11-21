@@ -15,6 +15,7 @@ def app():
     db_fd, db_path = tempfile.mkstemp()
 
     app = create_app({
+        'SECRET_KEY': 'test_key',
         'TESTING': True,
         'DATABASE': db_path,
     })
