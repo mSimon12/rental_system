@@ -1,6 +1,6 @@
 
 from flask import Blueprint, request, render_template, redirect, url_for
-from flask_login import login_required, current_user
+from flask_login import current_user
 from flaskr.frontend.api_interface import ItemsInterface
 from flaskr.frontend.forms import CommentForm, RentItemForm, ReturnItemForm
 
@@ -16,7 +16,6 @@ def store():
 
 
 @bp.route('/<int:id>', methods=['GET', 'POST'])
-@login_required
 def product_view(id):
     comment_form = CommentForm()
     rent_form = RentItemForm()
