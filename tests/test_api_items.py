@@ -1,5 +1,5 @@
 import pytest
-
+import json
 
 class TestApiItems:
 
@@ -15,9 +15,14 @@ class TestApiItems:
 
     @pytest.fixture
     def login_admin_user(self, api_client):
-        login_request = {"username": "test",
-                         "password": "pbkdf2:sha256:50000$TCI4GzcX$0de171a4f4dac32e3364c7ddc7c14f3e2fa61f2d17574483f7ffbb431b4acb2f"
+        with open("tests/test_vars.json", "r") as test_file:
+            test_vars = json.load(test_file)
+
+        admin_user = test_vars['users']['admin_user']
+        login_request = {"username": admin_user['username'],
+                         "password": admin_user['password']
                          }
+
         api_client.post('/api/users/login', json=login_request)
 
     # TEST GETTING ITEMS LIST
