@@ -57,7 +57,7 @@ The evolution of this project follows the sequence described below:
 * Save comments added on item page
 * Deploy the application
 
-[//]: # (## System view)
+## System view
 
-[//]: # ()
-[//]: # (![Representation of the system components]&#40;images/architecture.png&#41;)
+
+![Representation of the system components](images/arch.png)
