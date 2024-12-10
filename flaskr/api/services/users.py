@@ -1,9 +1,11 @@
-from flask_login import UserMixin, login_user, logout_user, current_user
+from flask import jsonify
+from flask_login import UserMixin
+from flask_jwt_extended import create_access_token, get_jwt_identity, verify_jwt_in_request
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import timedelta
 from functools import wraps
 from flaskr.api.models.users import Users
 from flaskr.api.models.roles import Roles
-
 
 class UsersService:
 
@@ -85,35 +87,52 @@ class UsersService:
 
     def login(self, username, password):
         user_info = self.__check_credentials(username, password)
+        token_response = None
         if user_info is not None:
-            user = User(user_info['id'],
-                        user_info['username'],
-                        user_info['email'],
-                        user_info['password'],
-                        user_info['role_id'],
-                        )
+            user = self.get_user(user_info['id'])
 
-            login_user(user)
-            return True
-        return False
+            # Generate access and refresh tokens
+            access_token = create_access_token(identity=str(user.id),
+                                               expires_delta=timedelta(minutes=10))
+            token_response = jsonify({
+                    "access_token": access_token
+            })
 
-    @staticmethod
-    def logout():
-        logout_user()
+            # set_access_cookies()
 
-        if not current_user.is_authenticated:
-            return True
-
-        return False
+            return True, token_response
+        return False, token_response
 
     @staticmethod
-    def role_required(role):
+    def block_user(user_id):
+        # TODO: implement user blacklist with cache
+        return True
+
+    @staticmethod
+    def login_required():
         def decorator(f):
             @wraps(f)
             def decorated_function(*args, **kwargs):
-                if not current_user.is_authenticated or str.lower(current_user.role) != str.lower(role):
-                    return "error': Access denied", 403
-                return f(*args, **kwargs)
+                if verify_jwt_in_request():
+                    return f(*args, **kwargs)
+
+            return decorated_function
+
+        return decorator
+
+    @classmethod
+    def role_required(cls, role):
+        def decorator(f):
+            @wraps(f)
+            def decorated_function(*args, **kwargs):
+                jwt_header = verify_jwt_in_request()
+                if jwt_header:
+                    user_id = get_jwt_identity()
+                    user = cls.get_user(user_id)
+                    if user.role == role:
+                        return f(*args, **kwargs)
+                    else:
+                        return "error': Access denied", 403
 
             return decorated_function
 
