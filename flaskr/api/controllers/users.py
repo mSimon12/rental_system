@@ -19,7 +19,6 @@ def get_users():
 
 
 @bp.route('/', methods=['POST'])
-@UsersService.role_required('Admin')
 def add_user():
     request_input = request.get_json()
 
