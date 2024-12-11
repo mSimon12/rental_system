@@ -126,7 +126,8 @@ class UsersService:
                 if verify_jwt_in_request():
                     user_id = get_jwt_identity()
                     user = cls.get_user(user_id)
-                    if user.role == role:
+
+                    if Roles.query_role_id(user.role) <= Roles.query_role_id(role):
                         return f(*args, **kwargs)
                     else:
                         return {'msg': 'Access denied'}, 403
