@@ -98,8 +98,6 @@ class UsersService:
                     "access_token": access_token
             })
 
-            # set_access_cookies()
-
             return True, token_response
         return False, token_response
 
@@ -125,14 +123,13 @@ class UsersService:
         def decorator(f):
             @wraps(f)
             def decorated_function(*args, **kwargs):
-                jwt_header = verify_jwt_in_request()
-                if jwt_header:
+                if verify_jwt_in_request():
                     user_id = get_jwt_identity()
                     user = cls.get_user(user_id)
                     if user.role == role:
                         return f(*args, **kwargs)
                     else:
-                        return "error': Access denied", 403
+                        return {'msg': 'Access denied'}, 403
 
             return decorated_function
 
