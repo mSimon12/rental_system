@@ -2,6 +2,7 @@ from flask import Flask, render_template
 from dotenv import load_dotenv
 import os
 from flask_login import LoginManager
+from flask_jwt_extended import JWTManager
 
 # Backend
 from flaskr.api import db
@@ -22,6 +23,8 @@ def create_app(test_config=None):
         SECRET_KEY= os.getenv("API_SECRET"),
         DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
     )
+
+    jwt = JWTManager(app)
 
     if test_config is None:
         # load the instance config, if it exists, when not testing

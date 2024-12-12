@@ -1,7 +1,23 @@
 import requests
 
 
-class ItemsInterface:
+class APIInterface:
+
+    def __init__(self):
+        self.header = None
+
+    def set_token(self, token):
+        if token:
+            self.header = {'Authorization': f"Bearer {token}"}
+
+    def clear_token(self, token):
+        self.header = None
+
+
+class ItemsInterface(APIInterface):
+
+    def __init__(self):
+        super().__init__()
 
     @staticmethod
     def get_item_info(item_id):
@@ -32,92 +48,86 @@ class ItemsInterface:
 
         return store_items
 
-    @staticmethod
-    def add_new_item_to_store(new_item) -> bool:
-        resp = requests.post('http://127.0.0.1:5000/api/items', json=new_item)
+    def add_new_item_to_store(self, new_item) -> tuple:
+        resp = requests.post('http://127.0.0.1:5000/api/items', json=new_item, headers=self.header)
         if resp.status_code == 201:
-            return True
+            return True, resp.status_code
 
-        return False
+        return False, resp.status_code
 
-    @staticmethod
-    def delete_item_from_store(item_id) -> bool:
+    def delete_item_from_store(self, item_id) -> bool:
         pass
 
-    @staticmethod
-    def rent_item(item_id, client_id) -> bool:
-        req_msg = {"client_id": client_id}
-        resp = requests.put(f"http://127.0.0.1:5000/api/items/{item_id}/rent", json=req_msg)
+    def rent_item(self, item_id, client_id) -> tuple:
+        req_msg = {"user_id": client_id}
+        resp = requests.put(f"http://127.0.0.1:5000/api/items/{item_id}/rent", json=req_msg, headers=self.header)
         if resp.status_code == 204:
-            return True
+            return True, resp.status_code
         else:
-            return False
+            return False, resp.status_code
 
-    @staticmethod
-    def return_item(item_id, client_id) -> bool:
-        req_msg = {"client_id": client_id}
-        resp = requests.put(f"http://127.0.0.1:5000/api/items/{item_id}/return", json=req_msg)
+    def return_item(self, item_id, client_id) -> tuple:
+        req_msg = {"user_id": client_id}
+        resp = requests.put(f"http://127.0.0.1:5000/api/items/{item_id}/return", json=req_msg, headers=self.header)
         if resp.status_code == 204:
-            return True
+            return True, resp.status_code
         else:
-            return False
+            return False, resp.status_code
 
 
-class UserInterface:
+class UserInterface(APIInterface):
 
-    @staticmethod
-    def get_users_list():
-        resp = requests.get('http://127.0.0.1:5000//api/users')
+    def __init__(self):
+        super().__init__()
+
+    def get_users_list(self):
+        resp = requests.get('http://127.0.0.1:5000//api/users', headers=self.header)
         if resp.status_code == 200:
             return dict(resp.json())
         else:
             return None
 
-    @staticmethod
-    def get_user_by_id(user_id):
-        resp = requests.get(f"http://127.0.0.1:5000//api/users/{user_id}")
+    def get_user_by_id(self, user_id):
+        resp = requests.get(f"http://127.0.0.1:5000//api/users/{user_id}", headers=self.header)
         if resp.status_code == 200:
             user_info = dict(resp.json())
             return user_info
         else:
             return None
 
-    @staticmethod
-    def add_user(username, email, password) -> bool:
+    def add_user(self, username, email, password) -> bool:
         new_user = {
             "username": username,
             "email": email,
             "password": password
         }
-        resp = requests.post('http://127.0.0.1:5000//api/users', json=new_user)
+        resp = requests.post('http://127.0.0.1:5000//api/users', json=new_user, headers=self.header)
         if resp.status_code == 201:
             return True
 
         return False
 
-    @staticmethod
-    def delete_user(user_info) -> bool:
-        resp = requests.post('http://127.0.0.1:5000//api/users', json=user_info)
+    def delete_user(self, user_info) -> bool:
+        resp = requests.post('http://127.0.0.1:5000//api/users', json=user_info, headers=self.header)
         if resp.status_code == 204:
             return True
 
         return False
 
     @staticmethod
-    def login_user(username, password) -> bool:
+    def login_user(username, password) -> (bool, dict):
         user_info = {
             "username": username,
             "password": password
         }
         resp = requests.post('http://127.0.0.1:5000//api/users/login', json=user_info)
         if resp.status_code == 200:
-            return True
+            return True, resp.json()["access_token"]
 
-        return False
+        return False, None
 
-    @staticmethod
-    def logout_user(user_id) -> bool:
-        resp = requests.post(f"http://127.0.0.1:5000//api/users/{user_id}/logout")
+    def logout_user(self, user_id) -> bool:
+        resp = requests.post(f"http://127.0.0.1:5000//api/users/{user_id}/logout", headers=self.header)
         if resp.status_code == 204:
             return True
 

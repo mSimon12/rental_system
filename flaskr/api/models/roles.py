@@ -16,3 +16,16 @@ class Roles:
             return dict(role_name)['role']
 
         return ''
+
+    def query_role_id(role_name):
+        db = get_db()
+
+        role_id = db.execute(
+            'SELECT id FROM roles WHERE role = ?',
+            (role_name, ),
+        ).fetchone()
+
+        if role_name:
+            return dict(role_id)['id']
+
+        return ''

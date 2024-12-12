@@ -1,12 +1,13 @@
 from flask import Blueprint, request, jsonify
 from flaskr.api.services.users import UsersService
-from flask_login import login_required, current_user
 
 bp = Blueprint('api-users', __name__, url_prefix='/api/users')
+
 
 ####################################################################################
 # API calls
 @bp.route('/')
+@UsersService.role_required('Admin')
 def get_users():
     service = UsersService()
     users_dict = service.get_users_list()
@@ -48,19 +49,12 @@ def add_user():
         return '', 400
 
 
-@bp.route('/', methods=['DELETE'])
-# TODO: require login here
-def delete_user():
-    request_input = request.get_json()
-
-    if 'username' not in request_input:
-        return 'username missing!', 400
-    elif 'password' not in request_input:
-        return 'password missing!', 400
+@bp.route('/<int:user_id>', methods=['DELETE'])
+@UsersService.role_required('Admin', allow_owner=True)
+def delete_user(user_id):
 
     service = UsersService()
-    delete_user_status = service.delete_user(request_input['username'],
-                                     request_input['password'])
+    delete_user_status = service.delete_user(user_id)
 
     if delete_user_status:
         return '', 204
@@ -69,6 +63,7 @@ def delete_user():
 
 
 @bp.route('/<int:user_id>')
+@UsersService.role_required('Admin', allow_owner=True)
 def get_user_info(user_id):
     service = UsersService()
     user_exists = service.verify_user_match(user_id=user_id)
@@ -81,11 +76,8 @@ def get_user_info(user_id):
     return 'Required user not found', 404
 
 
-# TODO: implement login endpoint
 @bp.route('/login', methods=['POST'])
 def login_user():
-    if current_user.is_authenticated:
-        return 'Some user already logged', 401
 
     request_input = request.get_json()
 
@@ -100,23 +92,21 @@ def login_user():
     if not user_exists:
         return 'Required user not found', 400
 
-    login_approved = service.login(request_input['username'], request_input['password'])
+    login_approved, token = service.login(request_input['username'], request_input['password'])
     if login_approved:
-        return '', 200
+        return token, 200
 
     return '', 400
 
 
 @bp.route('<int:user_id>/logout', methods=['POST'])
+@UsersService.login_required()
 def logout_user(user_id):
-    if current_user.is_authenticated:
-        if user_id == current_user.id:
-            service = UsersService()
-            if service.logout():
-                return '', 200
-            else:
-                return 'Failed to logout', 400
-        else:
-            return 'Required user is not logged in', 400
+    # TODO: implement Blacklist
+    # service = UsersService()
+    # if service.block_user():
+    #     return '', 200
+    # else:
+    #     return 'Failed to logout', 400
 
-    return 'No user authenticated', 400
+    return 'Not implemented', 400

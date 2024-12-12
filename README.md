@@ -53,6 +53,11 @@ The evolution of this project follows the sequence described below:
 
 
 ### To-Do: 
+* Add Stateless authentication
+* Update Model base to SQLAlchemy and Postgress as db
+* Split the app into 2 flask instances (backend and frontend-flask just for testing)
+* Dockerize each instance
+* Implement microservices
 * Add Flask-Admin for better admin management
 * Save comments added on item page
 * Deploy the application
