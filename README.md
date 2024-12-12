@@ -49,15 +49,14 @@ The evolution of this project follows the sequence described below:
 9. Implement use credentials management
 10. Added unit test for client and items APIs
 11. Create initial pipeline for continuous test at push
-12. Implemented role based authentication
+12. Implemented stateless role based authentication with JWT
 
 
 ### To-Do: 
-* Add Stateless authentication
-* Update Model base to SQLAlchemy and Postgress as db
 * Split the app into 2 flask instances (backend and frontend-flask just for testing)
 * Dockerize each instance
 * Implement microservices
+* Update Model base to SQLAlchemy and Postgress as db
 * Add Flask-Admin for better admin management
 * Save comments added on item page
 * Deploy the application
