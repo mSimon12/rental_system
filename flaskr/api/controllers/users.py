@@ -49,19 +49,12 @@ def add_user():
         return '', 400
 
 
-@bp.route('/', methods=['DELETE'])
-@UsersService.role_required('Admin')
-def delete_user():
-    request_input = request.get_json()
-
-    if 'username' not in request_input:
-        return 'username missing!', 400
-    elif 'password' not in request_input:
-        return 'password missing!', 400
+@bp.route('/<int:user_id>', methods=['DELETE'])
+@UsersService.role_required('Admin', allow_owner=True)
+def delete_user(user_id):
 
     service = UsersService()
-    delete_user_status = service.delete_user(request_input['username'],
-                                     request_input['password'])
+    delete_user_status = service.delete_user(user_id)
 
     if delete_user_status:
         return '', 204
@@ -70,7 +63,7 @@ def delete_user():
 
 
 @bp.route('/<int:user_id>')
-@UsersService.role_required('Admin')
+@UsersService.role_required('Admin', allow_owner=True)
 def get_user_info(user_id):
     service = UsersService()
     user_exists = service.verify_user_match(user_id=user_id)
