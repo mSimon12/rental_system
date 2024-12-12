@@ -1,0 +1,16 @@
+{
+  "users":{
+    "admin_user": {
+      "username": "test",
+      "email": "test.email@example.com",
+      "password": "4f4dac32e3364c7ddc7c",
+      "role_id": 0
+    },
+    "normal_user": {
+        "username": "other",
+        "email": "other.email@example.com",
+        "password": "1b030a9761f5ccaeea",
+        "role_id": 2
+    }
+  }
+}
