@@ -4,8 +4,8 @@ from flask_jwt_extended import create_access_token, get_jwt_identity, verify_jwt
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta
 from functools import wraps
-from flaskr.api.models.users import Users
-from flaskr.api.models.roles import Roles
+from flaskr.models.users import Users
+from flaskr.models.roles import Roles
 
 class UsersService:
 
