@@ -1,8 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, make_response
-from flaskr.frontend.forms import RegistrationForm, LoginForm
-from flask_login import current_user
+from flaskr.forms import RegistrationForm, LoginForm
 from flask_jwt_extended import set_access_cookies, unset_jwt_cookies
-from flaskr.frontend.api_interface import UserInterface
+from flaskr.api_interface import UserInterface
 
 bp = Blueprint('user', __name__, url_prefix='/user')
 

@@ -1,8 +1,8 @@
 import os
 import tempfile
 import pytest
-from flaskr import create_app
-from flaskr.api.db import get_db, init_db
+from backend.flaskr import create_app
+from backend.flaskr.db import get_db, init_db
 from werkzeug.security import generate_password_hash
 import json
 

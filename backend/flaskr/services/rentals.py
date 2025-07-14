@@ -1,5 +1,5 @@
 from datetime import datetime
-from flaskr.api.models.rentals import Rentals
+from flaskr.models.rentals import Rentals
 
 
 class RentalsService:

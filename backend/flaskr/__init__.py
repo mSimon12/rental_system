@@ -5,13 +5,10 @@ from flask_login import LoginManager
 from flask_jwt_extended import JWTManager
 
 # Backend
-from flaskr.api import db
-from flaskr.api.controllers import users
-from flaskr.api.controllers import items
-from flaskr.api.services.users import UsersService
-
-# Frontend
-from flaskr.frontend import user, store, shelf_manager
+from flaskr import db
+from flaskr.controllers import users
+from flaskr.controllers import items
+from flaskr.services.users import UsersService
 
 
 def create_app(test_config=None):
@@ -39,9 +36,9 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    @app.route("/")
-    def main_page():
-        return render_template("base.html")
+    # @app.route("/")
+    # def main_page():
+    #     return render_template("base.html")
 
     db.init_app(app)
 
@@ -58,8 +55,8 @@ def create_app(test_config=None):
     app.register_blueprint(users.bp)
 
     # Add frontend views
-    app.register_blueprint(shelf_manager.bp)
-    app.register_blueprint(store.bp)
-    app.register_blueprint(user.bp)
+    # app.register_blueprint(shelf_manager.bp)
+    # app.register_blueprint(store.bp)
+    # app.register_blueprint(user.bp)
 
     return app
