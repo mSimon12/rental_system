@@ -1,9 +1,0 @@
-
-services:
-  frontend-server:
-    container_name: rent_frontend
-    build:
-      context: ..
-      dockerfile: deploy/Dockerfile
-    ports:
-      - 8001:8001

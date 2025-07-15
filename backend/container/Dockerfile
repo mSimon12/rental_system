@@ -12,6 +12,9 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
+# Copy the source code into the container.
+COPY flaskr flaskr
+
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
 # Leverage a bind mount to requirements.txt to avoid having to copy them into
@@ -20,12 +23,10 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
     python -m pip install -r requirements.txt
 
-# Copy the source code into the container.
-COPY flaskr flaskr
+RUN flask --app flaskr init-db
 
 # Expose the port that the application listens on.
-EXPOSE 8001
-EXPOSE 8000
+EXPOSE 5001
 
 # Run the application.
-CMD flask --app flaskr run -h 0.0.0.0 -p 8001
+CMD flask --app flaskr run -h 0.0.0.0 -p 5001
