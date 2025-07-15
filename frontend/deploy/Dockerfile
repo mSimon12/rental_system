@@ -28,4 +28,4 @@ EXPOSE 8001
 EXPOSE 8000
 
 # Run the application.
-CMD flask --app flaskr run -p 8001
+CMD flask --app flaskr run -h 0.0.0.0 -p 8001
