@@ -36,10 +36,6 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # @app.route("/")
-    # def main_page():
-    #     return render_template("base.html")
-
     db.init_app(app)
 
     login_manager = LoginManager()
@@ -54,9 +50,5 @@ def create_app(test_config=None):
     app.register_blueprint(items.bp)
     app.register_blueprint(users.bp)
 
-    # Add frontend views
-    # app.register_blueprint(shelf_manager.bp)
-    # app.register_blueprint(store.bp)
-    # app.register_blueprint(user.bp)
 
     return app

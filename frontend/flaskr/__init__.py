@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+from dotenv import load_dotenv
 import os
 
 from . import user, store, shelf_manager
@@ -6,6 +7,12 @@ from . import user, store, shelf_manager
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
+
+    load_dotenv()
+
+    app.config.from_mapping(
+        SECRET_KEY= os.getenv("API_SECRET"),
+    )
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
