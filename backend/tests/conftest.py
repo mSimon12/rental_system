@@ -1,8 +1,8 @@
 import os
 import tempfile
 import pytest
-from backend.flaskr import create_app
-from backend.flaskr.db import get_db, init_db
+from flaskr import create_app
+from flaskr.db import get_db, init_db
 from werkzeug.security import generate_password_hash
 import json
 
@@ -25,7 +25,7 @@ def app():
         db = get_db()
         db.executescript(_data_sql)
 
-        with open("tests/test_vars.json", "r") as test_file:
+        with open(os.path.join(os.path.dirname(__file__), "test_vars.json"), "r") as test_file:
             test_vars = json.load(test_file)
 
         for user in test_vars['users'].values():
