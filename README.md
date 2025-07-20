@@ -1,5 +1,8 @@
 # Rental System
 
+![Build](https://img.shields.io/github/actions/workflow/status/mSimon12/rental_system/main.yml?branch=main)
+![Docker](https://img.shields.io/badge/docker-ready-blue)
+
 **Rental System** is a simple, multi-service web application designed to help stores manage 
 product rentals as they grow. It offers a backend API and a web interface that handle client 
 registration, item availability, rental tracking, and administrative stock management.
@@ -25,12 +28,22 @@ This application is composed of two services:
 
 ## 🛠️ Tech Stack
 
-- **Backend:** Python, Flask, SQLite (PostgreSQL planned), SQLAlchemy (planned)  
-- **Frontend:** Flask + Jinja2  
-- **Auth:** JWT (stateless)  
-- **DevOps:** Docker, Docker Compose  
-- **Testing:** Pytest  
-- **Planned:** PostgreSQL, Flask-Admin, GitHub Actions
+<div align="left">
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" height="30" alt="python logo"  />
+  <img width="12" />
+  <img src="https://skillicons.dev/icons?i=flask" height="30" alt="flask logo"  />
+  <img width="12" />
+  <img src="https://skillicons.dev/icons?i=sqlite" height="30" alt="flask logo"  />
+  <img width="12" />
+  <img src="https://skillicons.dev/icons?i=jinja" height="30" alt="flask logo"  />
+  <img width="12" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" height="30" alt="postgresql logo"  />
+  <img width="12" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" height="30" alt="git logo"  />
+  <img width="12" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" height="30" alt="docker logo"  />
+  <img width="12" />
+</div>
 
 ---
 
