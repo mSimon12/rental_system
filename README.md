@@ -1,7 +1,8 @@
 # Rental System
 
-![Build](https://img.shields.io/github/actions/workflow/status/mSimon12/rental_system/main.yml?branch=main)
 ![Docker](https://img.shields.io/badge/docker-ready-blue)
+[![CI](https://github.com/mSimon12/rental_system/actions/workflows/main.yml/badge.svg)](https://github.com/mSimon12/rental_system/actions)
+[![codecov](https://codecov.io/gh/mSimon12/rental_system/branch/main/graph/badge.svg)](https://codecov.io/gh/mSimon12/rental_system)
 
 **Rental System** is a simple, multi-service web application designed to help stores manage 
 product rentals as they grow. It offers a backend API and a web interface that handle client 
