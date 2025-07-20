@@ -1,4 +1,4 @@
-name: RentalSystem Updates Checker
+name: Rental Systems Pipeline
 
 on:
   push:
@@ -30,9 +30,7 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Lint with flake8
         run: |
-          # stop the build if there are Python syntax errors or undefined names
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
   test:
@@ -46,23 +44,30 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      - name: Test with pytest
-        run: |
-          python -m pytest --cov --cov-report=html:reports/test-${{ matrix.python-version }}
+          pip install -r requirements.txt
+          pip install pytest pytest-cov
 
-      - name: Upload pytest test results
+      - name: Run Tests with Coverage
+        run: |
+          pytest --cov=backend/flaskr --cov-report=xml --cov-report=html:reports/test-${{ matrix.python-version }}
+
+      - name: Upload HTML Report as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: pytest-results-${{ matrix.python-version }}
           path: reports/test-${{ matrix.python-version }}
-          retention-days: 5
-        # Use always() to always run this step to publish test results when there are test failures
         if: ${{ always() }}
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: coverage.xml
