@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  backend:
+    container_name: rent_api
+    build:
+      context: ../backend
+      dockerfile: container/Dockerfile
+    ports:
+      - 5001:5001
+
+  frontend:
+    container_name: rent_frontend
+    build:
+      context: ../frontend
+      dockerfile: container/Dockerfile
+    ports:
+      - 5000:5000

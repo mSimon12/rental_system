@@ -1,9 +1,8 @@
 import json
 
 from flask import Blueprint, request, render_template, redirect, url_for
-from flask_login import current_user
-from flaskr.frontend.api_interface import ItemsInterface
-from flaskr.frontend.forms import CommentForm, RentItemForm, ReturnItemForm
+from flaskr.api_interface import ItemsInterface
+from flaskr.forms import CommentForm, RentItemForm, ReturnItemForm
 import base64
 
 bp = Blueprint('store', __name__, url_prefix='/store')

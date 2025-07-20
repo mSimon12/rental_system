@@ -1,6 +1,4 @@
-from datetime import datetime
-from flaskr.api.models.items import Items
-from flaskr.api.models.rentals import Rentals
+from flaskr.models.items import Items
 
 
 class ItemsService:

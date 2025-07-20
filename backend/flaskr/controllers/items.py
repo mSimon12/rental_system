@@ -1,8 +1,7 @@
 from flask import Blueprint, request, jsonify
-from flaskr.api.services.items import ItemsService
-from flaskr.api.services.users import UsersService
-from flaskr.api.services.rentals import RentalsService
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flaskr.services.items import ItemsService
+from flaskr.services.users import UsersService
+from flaskr.services.rentals import RentalsService
 
 bp = Blueprint('api-items', __name__, url_prefix='/api/items')
 

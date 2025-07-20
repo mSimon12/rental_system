@@ -2,9 +2,8 @@ import logging
 
 from flask import Blueprint, request, render_template, url_for, redirect, flash
 from logging import Logger
-from flaskr.frontend.forms import AddItemForm
-from flaskr.frontend.api_interface import ItemsInterface
-from flaskr.api.services.users import UsersService
+from flaskr.forms import AddItemForm
+from flaskr.api_interface import ItemsInterface
 
 logger = Logger('manager', level='DEBUG')
 file_handler = logging.FileHandler("debug.log")

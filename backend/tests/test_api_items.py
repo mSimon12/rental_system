@@ -1,5 +1,6 @@
 import pytest
 import json
+import os
 
 class TestApiItems:
 
@@ -17,7 +18,7 @@ class TestApiItems:
 
     @pytest.fixture
     def login_admin_user(self, api_client):
-        with open("tests/test_vars.json", "r") as test_file:
+        with open(os.path.join(os.path.dirname(__file__), "test_vars.json"), "r") as test_file:
             test_vars = json.load(test_file)
 
         admin_user = test_vars['users']['admin_user']

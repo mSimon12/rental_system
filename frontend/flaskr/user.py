@@ -1,8 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, make_response
-from flaskr.frontend.forms import RegistrationForm, LoginForm
-from flask_login import current_user
-from flask_jwt_extended import set_access_cookies, unset_jwt_cookies
-from flaskr.frontend.api_interface import UserInterface
+from flaskr.forms import RegistrationForm, LoginForm
+from flaskr.api_interface import UserInterface
 
 bp = Blueprint('user', __name__, url_prefix='/user')
 
@@ -47,10 +45,16 @@ def login_request():
 
         call_status, access_token = UserInterface.login_user(username, password)
 
-        response = make_response(redirect(url_for('main_page')))
-        set_access_cookies(response, access_token)
-
         if call_status:
+            response = make_response(redirect(url_for('main_page')))
+            response.set_cookie(
+                "access_token_cookie",
+                access_token,
+                httponly=True,
+                secure=True,
+                samesite="Lax",
+                max_age=60 * 60 * 24 * 7  # 1 week
+            )
             return response
         else:
             flash("Invalid login data!")
@@ -63,5 +67,12 @@ def logout():
     # UserInterface.logout_user(current_user.id)
 
     response = make_response(redirect(url_for('main_page')))
-    unset_jwt_cookies(response)
+    response.set_cookie(
+        "access_token_cookie",
+        "",
+        expires=0,
+        httponly=True,
+        secure=True,
+        samesite="Lax"
+    )
     return response
