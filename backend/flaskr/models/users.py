@@ -1,4 +1,4 @@
-from flaskr.api.db import get_db
+from flaskr.db import get_db
 
 
 class Users:
