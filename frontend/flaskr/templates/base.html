@@ -2,17 +2,96 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Renting system</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RentalHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/base.css') }}">
+    {% block head%}
+    {% endblock %}
 </head>
 <body>
-    <h1>Renting System</h1>
-    <p><a href="/">Home</a></p>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-home"></i>
+                    <h1><a style="text-decoration:none; color:inherit;" href="/">RentalHub</a></h1>
+                </div>
+                <nav class="header-menu">
+                    <a href="{{ url_for('user.register_view') }}" class="header-menu-option">Register</a>
+                    <a class="login-btn" href="{{ url_for('user.login_view') }}">Sign In</a>
+                </nav>
+                <div class="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
     {% block content%}
-    <p><a href="/store/">Go to store</a></p>
-    <p><a href="/manager/">Go to store manager</a></p>
-    <p><a href="/user/login">Login</a></p>
-    <p><a href="/user/register">Register</a></p>
+
     {% endblock %}
-    <p><a href="/user/logout">Logout</a></p>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-home"></i>
+                        <span>RentalHub</span>
+                    </div>
+                    <p>Your trusted marketplace for renting anything you need.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+<!--                <div class="footer-section">-->
+<!--                    <h4>For Renters</h4>-->
+<!--                    <ul>-->
+<!--                        <li><a href="#">Browse Items</a></li>-->
+<!--                        <li><a href="#">How It Works</a></li>-->
+<!--                        <li><a href="#">Safety Tips</a></li>-->
+<!--                        <li><a href="#">Support</a></li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--                <div class="footer-section">-->
+<!--                    <h4>For Owners</h4>-->
+<!--                    <ul>-->
+<!--                        <li><a href="#">List Your Item</a></li>-->
+<!--                        <li><a href="#">Pricing Guide</a></li>-->
+<!--                        <li><a href="#">Insurance</a></li>-->
+<!--                        <li><a href="#">Owner Resources</a></li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--                <div class="footer-section">-->
+<!--                    <h4>Company</h4>-->
+<!--                    <ul>-->
+<!--                        <li><a href="#">About Us</a></li>-->
+<!--                        <li><a href="#">Careers</a></li>-->
+<!--                        <li><a href="#">Press</a></li>-->
+<!--                        <li><a href="#">Contact</a></li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 RentHub. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
 </body>
 </html>
+
