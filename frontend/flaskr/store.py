@@ -13,7 +13,7 @@ items_interface = ItemsInterface()
 @bp.route('/')
 def store():
     items = items_interface.get_store_items()
-    items = [(items[item]['id'], items[item]['item'], items[item]['available']) for item in items]
+    items = [(items[item]['id'], items[item]['item'], items[item]['description'], items[item]['available']) for item in items]
     return render_template("store.html", template_items=items)
 
 

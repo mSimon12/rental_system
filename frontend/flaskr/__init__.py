@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
 from dotenv import load_dotenv
 import os
 
@@ -29,7 +29,7 @@ def create_app(test_config=None):
 
     @app.route("/")
     def main_page():
-        return render_template("base.html")
+        return redirect(url_for('store.store'))
 
     # Add frontend views
     app.register_blueprint(shelf_manager.bp)
