@@ -1,6 +1,6 @@
 import requests
 
-API_URL = "http://backend:5001"
+API_URL = "http://localhost:5001"
 
 class APIInterface:
 
@@ -96,13 +96,14 @@ class UserInterface(APIInterface):
         else:
             return None
 
+    @classmethod
     def add_user(self, username, email, password) -> bool:
         new_user = {
             "username": username,
             "email": email,
             "password": password
         }
-        resp = requests.post(f"{API_URL}/api/users", json=new_user, headers=self.header)
+        resp = requests.post(f"{API_URL}/api/users", json=new_user)
         if resp.status_code == 201:
             return True
 

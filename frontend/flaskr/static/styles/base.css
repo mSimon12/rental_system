@@ -82,7 +82,7 @@ body {
     width: 100%;
 }
 
-.login-btn {
+.header-login-btn {
     text-decoration:none;
     background: linear-gradient(45deg, #ffd700, #ffed4e);
     color: #333;
@@ -95,9 +95,30 @@ body {
     box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
 }
 
-.login-btn:hover {
+.header-login-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+}
+
+.manager-link {
+    background: rgba(255, 215, 0, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.manager-link:hover {
+    background: rgba(255, 215, 0, 0.3);
+    border-color: rgba(255, 215, 0, 0.5);
+}
+
+.user-welcome {
+    color: #ffd700;
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
 }
 
 .mobile-menu-toggle {

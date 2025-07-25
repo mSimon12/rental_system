@@ -20,8 +20,18 @@
                     <h1><a style="text-decoration:none; color:inherit;" href="/">RentalHub</a></h1>
                 </div>
                 <nav class="header-menu">
-                    <a href="{{ url_for('user.register_view') }}" class="header-menu-option">Register</a>
-                    <a class="login-btn" href="{{ url_for('user.login_view') }}">Sign In</a>
+                    {% if user_logged_in %}
+                        {% if is_admin %}
+                            <a href="/manager" class="header-menu-option manager-link">
+                                <i class="fas fa-cogs"></i> Manager
+                            </a>
+                        {% endif %}
+                        <span class="user-welcome">Welcome, {{ username }}!</span>
+                        <a href="{{ url_for('user.logout') }}" class="header-login-btn">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('user.register_view') }}" class="header-menu-option">Register</a>
+                        <a href="{{ url_for('user.login_view') }}" class="header-login-btn" >Sign In</a>
+                    {% endif %}
                 </nav>
                 <div class="mobile-menu-toggle">
                     <i class="fas fa-bars"></i>
