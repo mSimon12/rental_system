@@ -6,26 +6,21 @@
 
 {% block content %}
 <div class="product-container">
-    <a href="/store/" class="back-link">
-        <i class="fas fa-arrow-left"></i>
-        Back to Store
+    <a href="{{ url_for('store.store') }}" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to Store
     </a>
 
     <div class="product-header">
         <div class="product-image">
-            <!-- Placeholder for product image -->
             <i class="fas fa-image product-image-placeholder"></i>
         </div>
 
         <div class="product-info">
-            <h1>{{ template_product_name }}</h1>
+            <h1 class="product-title">{{ template_product_name }}</h1>
 
             <div class="product-description">
-                <h3>
-                    <i class="fas fa-info-circle"></i>
-                    Description
-                </h3>
-                <p>{{ template_product_description }}</p>
+                <h3><i class="fas fa-info-circle"></i> Description</h3>
+                <p class="description-text">{{ template_product_description }}</p>
             </div>
 
             <div class="product-availability">
@@ -38,10 +33,7 @@
                 {% else %}
                     <span class="availability-badge unavailable">Out of Stock</span>
                 {% endif %}
-
-                <span class="stock-info">
-                    {{ template_product_available }}/{{ template_product_stock }} available
-                </span>
+                <span class="stock-info">{{ template_product_available }}/{{ template_product_stock }} available</span>
             </div>
 
             <div class="product-actions">
@@ -57,14 +49,15 @@
                     <i class="fas fa-undo"></i>
                 </form>
             </div>
+
             {% with messages = get_flashed_messages(with_categories=true) %}
-              {% if messages %}
-                <div class="flash-messages">
-                  {% for category, message in messages %}
-                    <div class="flash flash-{{ category }}">{{ message }}</div>
-                  {% endfor %}
-                </div>
-              {% endif %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash flash-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             {% endwith %}
         </div>
     </div>
@@ -72,8 +65,7 @@
     <div class="comments-section">
         <div class="comments-header">
             <h3>
-                <i class="fas fa-comments"></i>
-                Reviews & Comments
+                <i class="fas fa-comments"></i> Reviews & Comments
                 <span class="comments-count">({{ template_product_comments|length }} reviews)</span>
             </h3>
         </div>
@@ -85,28 +77,23 @@
                     <span class="comment-author">Anonymous User</span>
                     <span class="comment-date">Just now</span>
                 </div>
-
                 <div class="comment-rating">
                     {% for i in range(1, 6) %}
                         <i class="fas fa-star star {% if i <= 4 %}filled{% endif %}"></i>
                     {% endfor %}
                 </div>
-
                 <div class="comment-text">{{ comment }}</div>
             </div>
             {% endfor %}
         {% else %}
-            <div style="text-align: center; padding: 2rem; color: #666;">
-                <i class="fas fa-comment-slash" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+            <div class="no-comments">
+                <i class="fas fa-comment-slash"></i>
                 <p>No reviews yet. Be the first to share your experience!</p>
             </div>
         {% endif %}
 
         <div class="add-comment-form">
-            <h4>
-                <i class="fas fa-plus-circle"></i>
-                Add Your Review
-            </h4>
+            <h4><i class="fas fa-plus-circle"></i> Add Your Review</h4>
 
             <form method="POST">
                 {{ template_add_comment.hidden_tag() }}
@@ -114,11 +101,9 @@
                 <div class="form-group">
                     <label>Your Rating</label>
                     <div class="rating-input" id="ratingInput">
-                        <i class="fas fa-star rating-star" data-rating="1"></i>
-                        <i class="fas fa-star rating-star" data-rating="2"></i>
-                        <i class="fas fa-star rating-star" data-rating="3"></i>
-                        <i class="fas fa-star rating-star" data-rating="4"></i>
-                        <i class="fas fa-star rating-star" data-rating="5"></i>
+                        {% for i in range(1, 6) %}
+                            <i class="fas fa-star rating-star" data-rating="{{ i }}"></i>
+                        {% endfor %}
                     </div>
                     <input type="hidden" id="selectedRating" name="rating" value="0">
                 </div>
@@ -137,38 +122,26 @@
 
 <script>
 // Star rating functionality
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
     const ratingStars = document.querySelectorAll('.rating-star');
     const selectedRatingInput = document.getElementById('selectedRating');
     let currentRating = 0;
 
+    const highlightStars = (rating) => {
+        ratingStars.forEach((star, index) => {
+            star.classList.toggle('active', index < rating);
+        });
+    };
+
     ratingStars.forEach(star => {
-        star.addEventListener('mouseover', function() {
-            const rating = parseInt(this.getAttribute('data-rating'));
-            highlightStars(rating);
-        });
-
-        star.addEventListener('mouseout', function() {
-            highlightStars(currentRating);
-        });
-
-        star.addEventListener('click', function() {
-            currentRating = parseInt(this.getAttribute('data-rating'));
+        star.addEventListener('mouseover', () => highlightStars(+star.dataset.rating));
+        star.addEventListener('mouseout', () => highlightStars(currentRating));
+        star.addEventListener('click', () => {
+            currentRating = +star.dataset.rating;
             selectedRatingInput.value = currentRating;
             highlightStars(currentRating);
         });
     });
-
-    function highlightStars(rating) {
-        ratingStars.forEach((star, index) => {
-            if (index < rating) {
-                star.classList.add('active');
-            } else {
-                star.classList.remove('active');
-            }
-        });
-    }
 });
 </script>
 {% endblock %}
-
