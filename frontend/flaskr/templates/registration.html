@@ -17,64 +17,70 @@
 
             <div class="form-group">
                 <label for="username">Username</label>
-                {{ form.username(class="form-input", id="username", placeholder="Choose a unique username") }}
-                <i class="fas fa-user"></i>
-                {% for error in form.username.errors %}
-                <div class="error-message">
-                    <i class="fas fa-exclamation-circle"></i>
-                    {{ error }}
+                <div class="input-wrapper">
+                    {{ form.username(class="form-input", id="username", placeholder="Choose a unique username") }}
+                    <i class="fas fa-user"></i>
                 </div>
+                {% for error in form.username.errors %}
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i> {{ error }}
+                    </div>
                 {% endfor %}
             </div>
 
             <div class="form-group">
                 <label for="email">Email Address</label>
-                {{ form.email(class="form-input", id="email", placeholder="Enter your email address") }}
-                <i class="fas fa-envelope"></i>
-                {% for error in form.email.errors %}
-                <div class="error-message">
-                    <i class="fas fa-exclamation-circle"></i>
-                    {{ error }}
+                <div class="input-wrapper">
+                    {{ form.email(class="form-input", id="email", placeholder="Enter your email address") }}
+                    <i class="fas fa-envelope"></i>
                 </div>
+                {% for error in form.email.errors %}
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i> {{ error }}
+                    </div>
                 {% endfor %}
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
-                {{ form.password(class="form-input", id="password", placeholder="Create a strong password") }}
-                <i class="fas fa-lock"></i>
-                {% for error in form.password.errors %}
-                <div class="error-message">
-                    <i class="fas fa-exclamation-circle"></i>
-                    {{ error }}
+                <div class="input-wrapper">
+                    {{ form.password(class="form-input", id="password", placeholder="Create a strong password") }}
+                    <i class="fas fa-lock"></i>
                 </div>
+                {% for error in form.password.errors %}
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i> {{ error }}
+                    </div>
                 {% endfor %}
                 <div class="password-strength" id="passwordStrength"></div>
             </div>
 
             <div class="form-group">
                 <label for="password2">Confirm Password</label>
-                {{ form.password2(class="form-input", id="password2", placeholder="Confirm your password") }}
-                <i class="fas fa-lock"></i>
-                {% for error in form.password2.errors %}
-                <div class="error-message">
-                    <i class="fas fa-exclamation-circle"></i>
-                    {{ error }}
+                <div class="input-wrapper">
+                    {{ form.password2(class="form-input", id="password2", placeholder="Confirm your password") }}
+                    <i class="fas fa-lock"></i>
                 </div>
+                {% for error in form.password2.errors %}
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i> {{ error }}
+                    </div>
                 {% endfor %}
             </div>
 
-            {{ form.submit(class="register-btn", value="Create Account") }}
+            {{ form.submit(class="btn btn-primary register-btn", value="Create Account") }}
 
             <div class="terms-text">
                 By creating an account, you agree to our
                 <a href="#">Terms of Service</a> and
-                <a href="#">Privacy Policy</a>
+                <a href="#">Privacy Policy</a>.
             </div>
         </form>
 
         <div class="register-footer">
-            <p>Already have an account? <a href="{{ url_for('user.login_view') }}" class="login-link">Sign in here</a></p>
+            <p>Already have an account?
+                <a href="{{ url_for('user.login_view') }}" class="login-link">Sign in here</a>
+            </p>
         </div>
     </div>
 </div>
@@ -93,25 +99,11 @@ document.getElementById('password').addEventListener('input', function() {
     let strength = 0;
     let feedback = [];
 
-    // Length check
-    if (password.length >= 8) strength++;
-    else feedback.push('at least 8 characters');
-
-    // Uppercase check
-    if (/[A-Z]/.test(password)) strength++;
-    else feedback.push('uppercase letter');
-
-    // Lowercase check
-    if (/[a-z]/.test(password)) strength++;
-    else feedback.push('lowercase letter');
-
-    // Number check
-    if (/\d/.test(password)) strength++;
-    else feedback.push('number');
-
-    // Special character check
-    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
-    else feedback.push('special character');
+    if (password.length >= 8) strength++; else feedback.push('at least 8 characters');
+    if (/[A-Z]/.test(password)) strength++; else feedback.push('uppercase letter');
+    if (/[a-z]/.test(password)) strength++; else feedback.push('lowercase letter');
+    if (/\d/.test(password)) strength++; else feedback.push('number');
+    if (/[!@#$%^&*()_,.?":{}|<>]/.test(password)) strength++; else feedback.push('special character');
 
     let strengthText = '';
     let strengthClass = '';
@@ -119,23 +111,22 @@ document.getElementById('password').addEventListener('input', function() {
     if (strength < 3) {
         strengthText = 'Weak password';
         strengthClass = 'strength-weak';
-        if (feedback.length > 0) {
-            strengthText += ' - Add: ' + feedback.slice(0, 2).join(', ');
+        if (feedback.length) {
+            strengthText += ' – Add: ' + feedback.slice(0, 2).join(', ');
         }
     } else if (strength < 5) {
         strengthText = 'Medium password';
         strengthClass = 'strength-medium';
-        if (feedback.length > 0) {
-            strengthText += ' - Add: ' + feedback.slice(0, 1).join(', ');
+        if (feedback.length) {
+            strengthText += ' – Add: ' + feedback.slice(0, 1).join(', ');
         }
     } else {
         strengthText = 'Strong password ✓';
         strengthClass = 'strength-strong';
     }
 
-    strengthDiv.innerHTML = strengthText;
+    strengthDiv.textContent = strengthText;
     strengthDiv.className = 'password-strength ' + strengthClass;
 });
 </script>
 {% endblock %}
-

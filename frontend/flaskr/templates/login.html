@@ -1,52 +1,57 @@
 {% extends "base.html" %}
 
-{% block head%}
+{% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
 {% endblock %}
 
 {% block content %}
-<div class="login-container">
+<section class="login-container" aria-label="Login Section">
     <div class="login-card">
-        <div class="login-header">
+        <header class="login-header">
             <h2>Welcome Back</h2>
             <p>Sign in to your RentalHub account</p>
-        </div>
+        </header>
 
-        <form class="login-form" action="" method="post">
+        <form class="login-form" action="" method="post" aria-label="Login Form">
             {{ form.hidden_tag() }}
 
             <div class="form-group">
                 <label for="username">Username</label>
-                {{ form.username(class="form-input", id="username", placeholder="Enter your username") }}
-                <i class="fas fa-user"></i>
-                {% for error in form.username.errors %}
-                <div class="error-message">
-                    <i class="fas fa-exclamation-circle"></i>
-                    {{ error }}
+                <div class="input-wrapper">
+                    {{ form.username(class="form-input", id="username", placeholder="Enter your username", aria_describedby="usernameHelp") }}
+                    <i class="fas fa-user input-icon" aria-hidden="true"></i>
                 </div>
+                {% for error in form.username.errors %}
+                    <div class="error-message" id="usernameHelp">
+                        <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+                        {{ error }}
+                    </div>
                 {% endfor %}
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
-                {{ form.password(class="form-input", id="password", placeholder="Enter your password") }}
-                <i class="fas fa-lock"></i>
-                {% for error in form.password.errors %}
-                <div class="error-message">
-                    <i class="fas fa-exclamation-circle"></i>
-                    {{ error }}
+                <div class="input-wrapper">
+                    {{ form.password(class="form-input", id="password", placeholder="Enter your password", aria_describedby="passwordHelp") }}
+                    <i class="fas fa-lock input-icon" aria-hidden="true"></i>
                 </div>
+                {% for error in form.password.errors %}
+                    <div class="error-message" id="passwordHelp">
+                        <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+                        {{ error }}
+                    </div>
                 {% endfor %}
             </div>
 
             {{ form.submit(class="login-btn", value="Sign In") }}
         </form>
 
-        <div class="login-footer">
-            <p>Don't have an account? <a href="{{ url_for('user.register_view') }}" class="register-link">Create one here</a></p>
+        <footer class="login-footer">
+            <p>Don't have an account?
+                <a href="{{ url_for('user.register_view') }}" class="register-link">Create one here</a>
+            </p>
             <a href="#" class="forgot-password">Forgot your password?</a>
-        </div>
+        </footer>
     </div>
-</div>
+</section>
 {% endblock %}
-

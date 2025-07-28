@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>RentalHub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/base.css') }}">
-    {% block head%}
-    {% endblock %}
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/base.css') }}" />
+
+    {% block head %}{% endblock %}
 </head>
 <body>
+
     <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <div class="logo">
+                <a href="/" class="logo" aria-label="RentalHub Home">
                     <i class="fas fa-home"></i>
-                    <h1><a style="text-decoration:none; color:inherit;" href="/">RentalHub</a></h1>
-                </div>
-                <nav class="header-menu">
+                    <h1 class="site-title">RentalHub</h1>
+                </a>
+
+                <nav class="header-menu" aria-label="Main navigation">
                     {% if user_logged_in %}
                         {% if is_admin %}
                             <a href="/manager" class="header-menu-option manager-link">
@@ -30,40 +33,40 @@
                         <a href="{{ url_for('user.logout') }}" class="header-login-btn">Logout</a>
                     {% else %}
                         <a href="{{ url_for('user.register_view') }}" class="header-menu-option">Register</a>
-                        <a href="{{ url_for('user.login_view') }}" class="header-login-btn" >Sign In</a>
+                        <a href="{{ url_for('user.login_view') }}" class="header-login-btn">Sign In</a>
                     {% endif %}
                 </nav>
-                <div class="mobile-menu-toggle">
+
+                <button class="mobile-menu-toggle" aria-label="Toggle navigation menu">
                     <i class="fas fa-bars"></i>
-                </div>
+                </button>
             </div>
         </div>
     </header>
 
+    <!-- Main Content -->
     <main>
-    {% block content%}
-
-    {% endblock %}
+        {% block content %}{% endblock %}
     </main>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-section">
-                    <div class="footer-logo">
+                <section class="footer-section">
+                    <a href="/" class="footer-logo" aria-label="RentalHub Home">
                         <i class="fas fa-home"></i>
                         <span>RentalHub</span>
-                    </div>
+                    </a>
                     <p>Your trusted marketplace for renting anything you need.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <div class="social-links" aria-label="Social Media Links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
                     </div>
-                </div>
-<!--                <div class="footer-section">-->
+                </section>
+<!--                <section class="footer-section">-->
 <!--                    <h4>For Renters</h4>-->
 <!--                    <ul>-->
 <!--                        <li><a href="#">Browse Items</a></li>-->
@@ -71,8 +74,8 @@
 <!--                        <li><a href="#">Safety Tips</a></li>-->
 <!--                        <li><a href="#">Support</a></li>-->
 <!--                    </ul>-->
-<!--                </div>-->
-<!--                <div class="footer-section">-->
+<!--                </section>-->
+<!--                <section class="footer-section">-->
 <!--                    <h4>For Owners</h4>-->
 <!--                    <ul>-->
 <!--                        <li><a href="#">List Your Item</a></li>-->
@@ -80,8 +83,8 @@
 <!--                        <li><a href="#">Insurance</a></li>-->
 <!--                        <li><a href="#">Owner Resources</a></li>-->
 <!--                    </ul>-->
-<!--                </div>-->
-<!--                <div class="footer-section">-->
+<!--                </section>-->
+<!--                <section class="footer-section">-->
 <!--                    <h4>Company</h4>-->
 <!--                    <ul>-->
 <!--                        <li><a href="#">About Us</a></li>-->
@@ -89,19 +92,18 @@
 <!--                        <li><a href="#">Press</a></li>-->
 <!--                        <li><a href="#">Contact</a></li>-->
 <!--                    </ul>-->
-<!--                </div>-->
+<!--                </section>-->
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 RentHub. All rights reserved.</p>
-                <div class="footer-links">
+                <p>&copy; 2024 RentalHub. All rights reserved.</p>
+                <nav class="footer-links" aria-label="Footer links">
                     <a href="#">Privacy Policy</a>
                     <a href="#">Terms of Service</a>
                     <a href="#">Cookie Policy</a>
-                </div>
+                </nav>
             </div>
         </div>
     </footer>
 
 </body>
 </html>
-
