@@ -85,8 +85,12 @@
 .product-description {
     background: white;
     border-radius: 15px;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
 .product-description h3 {
@@ -100,9 +104,13 @@
 }
 
 .product-description p {
-    color: #666;
-    line-height: 1.6;
-    font-size: 1.1rem;
+    color: #555;
+    line-height: 1.7;
+    font-size: 1.05rem;
+    max-width: 800px;
+    white-space: pre-wrap; /* Preserve intentional line breaks */
+    word-break: break-word;
+    margin-top: 0.5rem;
 }
 
 .product-actions {
