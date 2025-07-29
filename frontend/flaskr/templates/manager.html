@@ -27,6 +27,11 @@
             <div class="stat-number">{{ template_available_count }}</div>
             <div class="stat-label">Available Items</div>
         </div>
+<!--        <div class="stat-card">-->
+<!--            <div class="stat-icon revenue"><i class="fas fa-dollar-sign" aria-hidden="true"></i></div>-->
+<!--            <div class="stat-number">{{ template_monthly_revenue }}</div>-->
+<!--            <div class="stat-label">Monthly Revenue</div>-->
+<!--        </div>-->
     </section>
 
     <section class="manager-content">
@@ -44,56 +49,54 @@
                 </div>
             </div>
 
-            <div class="table-wrapper">
-                <table class="items-table" id="itemsTable">
-                    <thead>
+            <table class="items-table" id="itemsTable">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Description</th>
+                        <th>Total Stock</th>
+                        <th>Available</th>
+<!--                        <th>Rented</th>-->
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if template_items %}
+                        {% for item in template_items %}
                         <tr>
-                            <th>Item Name</th>
-                            <th>Description</th>
-                            <th>Total Stock</th>
-                            <th>Available</th>
-                            <th>Rented</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+                            <td class="item-name">{{ template_items[item].item | title | e }}</td>
+                            <td data-fulltext="{{ template_items[item].description | e }}" class="item-description">{{ template_items[item].description | e }}</td>
+                            <td class="item-stock-size">{{ template_items[item].stock_size }}</td>
+                            <td class="item-available">{{ template_items[item].available }}</td>
+<!--                            <td class="item-rented">{{ template_items[item].stock_size - template_items[item].available }}</td>-->
+                            <td>
+                                {% set available_ratio = template_items[item].available / template_items[item].stock_size %}
+                                {% if available_ratio > 0.6 %}
+                                    <span class="stock-badge stock-high">High Stock</span>
+                                {% elif available_ratio > 0.3 %}
+                                    <span class="stock-badge stock-medium">Medium Stock</span>
+                                {% else %}
+                                    <span class="stock-badge stock-low">Low Stock</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="item-actions">
+                                    <button type="button" class="action-btn edit-btn" onclick="editItem('{{ item }}')" aria-label="Edit item {{ template_items[item].item }}">
+                                        <i class="fas fa-edit" aria-hidden="true"></i>
+                                    </button>
+                                    <button type="button" class="action-btn delete-btn" onclick="deleteItem('{{ item }}')" aria-label="Delete item {{ template_items[item].item }}">
+                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% if template_items %}
-                            {% for item in template_items %}
-                            <tr>
-                                <td class="item-name">{{ template_items[item].item | title | e }}</td>
-                                <td data-fulltext="{{ template_items[item].description | e }}">{{ template_items[item].description | truncate(50) | e }}</td>
-                                <td>{{ template_items[item].stock_size }}</td>
-                                <td>{{ template_items[item].available }}</td>
-                                <td>{{ template_items[item].stock_size - template_items[item].available }}</td>
-                                <td>
-                                    {% set available_ratio = template_items[item].available / template_items[item].stock_size %}
-                                    {% if available_ratio > 0.6 %}
-                                        <span class="stock-badge stock-high">High Stock</span>
-                                    {% elif available_ratio > 0.3 %}
-                                        <span class="stock-badge stock-medium">Medium Stock</span>
-                                    {% else %}
-                                        <span class="stock-badge stock-low">Low Stock</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <div class="item-actions">
-                                        <button type="button" class="action-btn edit-btn" onclick="editItem('{{ item }}')" aria-label="Edit item {{ template_items[item].item }}">
-                                            <i class="fas fa-edit" aria-hidden="true"></i>
-                                        </button>
-                                        <button type="button" class="action-btn delete-btn" onclick="deleteItem('{{ item }}')" aria-label="Delete item {{ template_items[item].item }}">
-                                            <i class="fas fa-trash" aria-hidden="true"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        {% else %}
-                        <tr><td colspan="7" class="empty-row">No items found in inventory.</td></tr>
-                        {% endif %}
-                    </tbody>
-                </table>
-            </div>
+                        {% endfor %}
+                    {% else %}
+                    <tr><td colspan="7" class="empty-row">No items found in inventory.</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
         </article>
 
         <aside>

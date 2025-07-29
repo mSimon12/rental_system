@@ -30,7 +30,6 @@ def product_view(id):
         payload = token.split(sep='.')[1]
 
         client_id = int(json.loads(base64.b64decode(payload))['sub'])
-        print(client_id, flush=True)
     else:
         return redirect(url_for('user.login_view'))
 
