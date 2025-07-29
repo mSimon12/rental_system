@@ -40,6 +40,14 @@ def manager():
 
     items = items_interface.get_store_items()
 
+    available_count = 0
+    rented_count = 0
+    for _, item in items.items():
+        available_count += item['available']
+        rented_count += item['stock_size'] - item['available']
+
     return render_template("manager.html",
                            template_items=items,
+                           template_available_count=available_count,
+                           template_rented_count=rented_count,
                            template_add_item=add_item_form)

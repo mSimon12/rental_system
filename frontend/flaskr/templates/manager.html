@@ -6,70 +6,36 @@
 
 {% block content %}
 <div class="manager-container">
-    <div class="manager-header">
-        <h1>
-            <i class="fas fa-cogs"></i>
-            Store Management Dashboard
-        </h1>
+    <section class="manager-header">
+        <h1><i class="fas fa-cogs" aria-hidden="true"></i> Store Management Dashboard</h1>
         <p>Manage your rental inventory and monitor business performance</p>
-    </div>
+    </section>
 
-    <div class="dashboard-stats">
+    <section class="dashboard-stats">
         <div class="stat-card">
-            <div class="stat-icon items">
-                <i class="fas fa-boxes"></i>
-            </div>
+            <div class="stat-icon items"><i class="fas fa-boxes" aria-hidden="true"></i></div>
             <div class="stat-number">{{ template_items|length }}</div>
             <div class="stat-label">Total Items</div>
         </div>
-
         <div class="stat-card">
-            <div class="stat-icon rented">
-                <i class="fas fa-handshake"></i>
-            </div>
-            <div class="stat-number">
-                {% set rented_count = 0 %}
-                {% for item in template_items %}
-                    {% set rented_count = rented_count + (template_items[item].stock_size - template_items[item].available) %}
-                {% endfor %}
-                {{ rented_count }}
-            </div>
+            <div class="stat-icon rented"><i class="fas fa-handshake" aria-hidden="true"></i></div>
+            <div class="stat-number">{{ template_rented_count }}</div>
             <div class="stat-label">Currently Rented</div>
         </div>
-
         <div class="stat-card">
-            <div class="stat-icon available">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <div class="stat-number">
-                {% set available_count = 0 %}
-                {% for item in template_items %}
-                    {% set available_count = available_count + template_items[item].available %}
-                {% endfor %}
-                {{ available_count }}
-            </div>
+            <div class="stat-icon available"><i class="fas fa-check-circle" aria-hidden="true"></i></div>
+            <div class="stat-number">{{ template_available_count }}</div>
             <div class="stat-label">Available Items</div>
         </div>
+    </section>
 
-        <div class="stat-card">
-            <div class="stat-icon revenue">
-                <i class="fas fa-dollar-sign"></i>
-            </div>
-            <div class="stat-number">$2,450</div>
-            <div class="stat-label">Monthly Revenue</div>
-        </div>
-    </div>
-
-    <div class="manager-content">
-        <div class="items-section">
+    <section class="manager-content">
+        <article class="items-section">
             <div class="section-header">
-                <h2>
-                    <i class="fas fa-list"></i>
-                    Inventory Management
-                </h2>
+                <h2><i class="fas fa-list" aria-hidden="true"></i> Inventory Management</h2>
                 <div class="search-filter">
-                    <input type="text" class="search-input" placeholder="Search items..." id="searchInput">
-                    <select class="filter-select" id="stockFilter">
+                    <input type="text" class="search-input" placeholder="Search items..." id="searchInput" aria-label="Search items">
+                    <select class="filter-select" id="stockFilter" aria-label="Filter by stock level">
                         <option value="all">All Stock Levels</option>
                         <option value="high">High Stock</option>
                         <option value="medium">Medium Stock</option>
@@ -78,61 +44,63 @@
                 </div>
             </div>
 
-            <table class="items-table" id="itemsTable">
-                <thead>
-                    <tr>
-                        <th>Item Name</th>
-                        <th>Description</th>
-                        <th>Total Stock</th>
-                        <th>Available</th>
-                        <th>Rented</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in template_items %}
-                    <tr>
-                        <td class="item-name">{{ template_items[item].item | title }}</td>
-                        <td>{{ template_items[item].description | truncate(50) }}</td>
-                        <td>{{ template_items[item].stock_size }}</td>
-                        <td>{{ template_items[item].available }}</td>
-                        <td>{{ template_items[item].stock_size - template_items[item].available }}</td>
-                        <td>
-                            {% set available_ratio = template_items[item].available / template_items[item].stock_size %}
-                            {% if available_ratio > 0.6 %}
-                                <span class="stock-badge stock-high">High Stock</span>
-                            {% elif available_ratio > 0.3 %}
-                                <span class="stock-badge stock-medium">Medium Stock</span>
-                            {% else %}
-                                <span class="stock-badge stock-low">Low Stock</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <div class="item-actions">
-                                <button class="action-btn edit-btn" onclick="editItem('{{ item }}')">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="action-btn delete-btn" onclick="deleteItem('{{ item }}')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+            <div class="table-wrapper">
+                <table class="items-table" id="itemsTable">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Description</th>
+                            <th>Total Stock</th>
+                            <th>Available</th>
+                            <th>Rented</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if template_items %}
+                            {% for item in template_items %}
+                            <tr>
+                                <td class="item-name">{{ template_items[item].item | title | e }}</td>
+                                <td data-fulltext="{{ template_items[item].description | e }}">{{ template_items[item].description | truncate(50) | e }}</td>
+                                <td>{{ template_items[item].stock_size }}</td>
+                                <td>{{ template_items[item].available }}</td>
+                                <td>{{ template_items[item].stock_size - template_items[item].available }}</td>
+                                <td>
+                                    {% set available_ratio = template_items[item].available / template_items[item].stock_size %}
+                                    {% if available_ratio > 0.6 %}
+                                        <span class="stock-badge stock-high">High Stock</span>
+                                    {% elif available_ratio > 0.3 %}
+                                        <span class="stock-badge stock-medium">Medium Stock</span>
+                                    {% else %}
+                                        <span class="stock-badge stock-low">Low Stock</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="item-actions">
+                                        <button type="button" class="action-btn edit-btn" onclick="editItem('{{ item }}')" aria-label="Edit item {{ template_items[item].item }}">
+                                            <i class="fas fa-edit" aria-hidden="true"></i>
+                                        </button>
+                                        <button type="button" class="action-btn delete-btn" onclick="deleteItem('{{ item }}')" aria-label="Delete item {{ template_items[item].item }}">
+                                            <i class="fas fa-trash" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                        <tr><td colspan="7" class="empty-row">No items found in inventory.</td></tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </article>
 
-        <div>
-            <div class="add-item-section">
+        <aside>
+            <article class="add-item-section">
                 <div class="section-header">
-                    <h2>
-                        <i class="fas fa-plus-circle"></i>
-                        Add New Item
-                    </h2>
+                    <h2><i class="fas fa-plus-circle" aria-hidden="true"></i> Add New Item</h2>
                 </div>
-
                 <form class="add-item-form" action="/manager" method="POST">
                     {{ template_add_item.hidden_tag() }}
 
@@ -143,7 +111,7 @@
 
                     <div class="form-group">
                         {{ template_add_item.description.label(class="form-label") }}
-                        {{ template_add_item.description(class="form-input form-textarea", placeholder="Describe the item...") }}
+                        {{ template_add_item.description(class="form-input form-textarea", placeholder="Enter key features, usage notes...") }}
                     </div>
 
                     <div class="form-group">
@@ -152,103 +120,73 @@
                     </div>
 
                     {{ template_add_item.submit(class="submit-btn") }}
-                    <i class="fas fa-plus"></i>
+                    <i class="fas fa-plus" aria-hidden="true"></i>
                 </form>
-            </div>
+            </article>
 
             <div class="quick-actions">
-                <h3>
-                    <i class="fas fa-bolt"></i>
-                    Quick Actions
-                </h3>
-
-                <button class="quick-action-btn" onclick="exportData()">
-                    <i class="fas fa-download"></i>
-                    Export Inventory Data
+                <h3><i class="fas fa-bolt" aria-hidden="true"></i> Quick Actions</h3>
+                <button type="button" class="quick-action-btn" onclick="exportData()">
+                    <i class="fas fa-download" aria-hidden="true"></i> Export Inventory Data
                 </button>
-
-                <button class="quick-action-btn" onclick="generateReport()">
-                    <i class="fas fa-chart-bar"></i>
-                    Generate Monthly Report
+                <button type="button" class="quick-action-btn" onclick="generateReport()">
+                    <i class="fas fa-chart-bar" aria-hidden="true"></i> Generate Monthly Report
                 </button>
-
-                <button class="quick-action-btn" onclick="bulkUpdate()">
-                    <i class="fas fa-edit"></i>
-                    Bulk Update Items
+                <button type="button" class="quick-action-btn" onclick="bulkUpdate()">
+                    <i class="fas fa-edit" aria-hidden="true"></i> Bulk Update Items
                 </button>
-
-                <button class="quick-action-btn" onclick="viewAnalytics()">
-                    <i class="fas fa-analytics"></i>
-                    View Analytics
+                <button type="button" class="quick-action-btn" disabled title="Coming Soon">
+                    <i class="fas fa-analytics" aria-hidden="true"></i> View Analytics (Coming Soon)
                 </button>
             </div>
-        </div>
-    </div>
+        </aside>
+    </section>
 </div>
 
 <script>
-// Search functionality
-document.getElementById('searchInput').addEventListener('input', function() {
-    const searchTerm = this.value.toLowerCase();
-    const table = document.getElementById('itemsTable');
-    const rows = table.getElementsByTagName('tr');
-
-    for (let i = 1; i < rows.length; i++) {
-        const itemName = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
-        const description = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
-
-        if (itemName.includes(searchTerm) || description.includes(searchTerm)) {
-            rows[i].style.display = '';
-        } else {
-            rows[i].style.display = 'none';
-        }
-    }
+let debounceTimeout;
+document.getElementById('searchInput').addEventListener('input', function () {
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(() => {
+        const searchTerm = this.value.toLowerCase();
+        const rows = document.querySelectorAll('#itemsTable tbody tr');
+        rows.forEach(row => {
+            const itemName = row.cells[0].textContent.toLowerCase();
+            const description = row.cells[1].textContent.toLowerCase();
+            row.style.display = (itemName.includes(searchTerm) || description.includes(searchTerm)) ? '' : 'none';
+        });
+    }, 300);
 });
 
-// Stock filter functionality
-document.getElementById('stockFilter').addEventListener('change', function() {
+document.getElementById('stockFilter').addEventListener('change', function () {
     const filterValue = this.value;
-    const table = document.getElementById('itemsTable');
-    const rows = table.getElementsByTagName('tr');
-
-    for (let i = 1; i < rows.length; i++) {
-        const stockBadge = rows[i].querySelector('.stock-badge');
-        const stockLevel = stockBadge.textContent.toLowerCase();
-
-        if (filterValue === 'all' || stockLevel.includes(filterValue)) {
-            rows[i].style.display = '';
-        } else {
-            rows[i].style.display = 'none';
-        }
-    }
+    const rows = document.querySelectorAll('#itemsTable tbody tr');
+    rows.forEach(row => {
+        const badge = row.querySelector('.stock-badge');
+        const stockLevel = badge ? badge.textContent.toLowerCase() : '';
+        row.style.display = (filterValue === 'all' || stockLevel.includes(filterValue)) ? '' : 'none';
+    });
 });
 
-// Action functions
 function editItem(itemId) {
-    alert('Edit functionality for item: ' + itemId + '\n(This would open an edit modal in a real application)');
+    alert(`Edit functionality for item: ${itemId}\n(This would open an edit modal in a real application)`);
 }
-
 function deleteItem(itemId) {
-    if (confirm('Are you sure you want to delete this item?')) {
-        alert('Delete functionality for item: ' + itemId + '\n(This would send a delete request in a real application)');
+    if (confirm(`Are you sure you want to delete this item?`)) {
+        {{ template_available_count}}
     }
 }
-
 function exportData() {
     alert('Exporting inventory data...\n(This would generate and download a CSV/Excel file)');
 }
-
 function generateReport() {
     alert('Generating monthly report...\n(This would create a comprehensive business report)');
 }
-
 function bulkUpdate() {
     alert('Opening bulk update interface...\n(This would allow updating multiple items at once)');
 }
-
 function viewAnalytics() {
     alert('Opening analytics dashboard...\n(This would show detailed business metrics and charts)');
 }
 </script>
 {% endblock %}
-
