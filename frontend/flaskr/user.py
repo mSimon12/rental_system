@@ -53,7 +53,7 @@ def login_request():
                 httponly=True,
                 secure=True,
                 samesite="Lax",
-                max_age=60 * 60 * 24 * 7  # 1 week
+                max_age=60 * 10  # 10 minutes
             )
             return response
         else:
