@@ -129,7 +129,7 @@ Once running, access the services at:
 - [x] Connected frontend to backend via API integration layer.
 - [x] Added item rent/return functionality.
 - [x] Dockerized frontend service.
-- [ ] Improve UI/UX and styling (currently minimal).
+- [x] Improve UI/UX and styling (currently minimal).
   - [x] Login
   - [x] Register
   - [x] Main page

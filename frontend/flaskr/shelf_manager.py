@@ -2,7 +2,7 @@ import logging
 
 from flask import Blueprint, request, render_template, url_for, redirect, flash
 from logging import Logger
-from flaskr.forms import AddItemForm
+from flaskr.forms import AddItemForm, DeleteItemForm
 from flaskr.api_interface import ItemsInterface
 
 logger = Logger('manager', level='DEBUG')
@@ -17,6 +17,7 @@ items_interface = ItemsInterface()
 @bp.route("/", methods=['GET', 'POST'])
 def manager():
     add_item_form = AddItemForm(request.form)
+    delete_item_form = DeleteItemForm()
 
     token = request.cookies.get("access_token_cookie")
     items_interface.set_token(token)
@@ -38,6 +39,15 @@ def manager():
         else:
             return redirect(url_for('manager.manager'))
 
+    if delete_item_form.validate_on_submit() and delete_item_form.submit.data:
+        item_name = delete_item_form.item_name.data
+        call_status, resp_status = items_interface.delete_item_from_store(item_name)
+        if not call_status:
+            if resp_status == 403:
+                flash('Not enough authorization rights!')
+                return redirect(url_for('user.login_view'))
+        return redirect(url_for('manager.manager'))
+
     items = items_interface.get_store_items()
 
     available_count = 0
@@ -50,4 +60,5 @@ def manager():
                            template_items=items,
                            template_available_count=available_count,
                            template_rented_count=rented_count,
-                           template_add_item=add_item_form)
+                           template_add_item=add_item_form,
+                           template_delete_item=delete_item_form)
