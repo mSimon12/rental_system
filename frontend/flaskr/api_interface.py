@@ -11,7 +11,6 @@ class APIInterface:
         self._api_endpoint = os.getenv('API_URL')
         if self._api_endpoint is None:
             self._api_endpoint = DEFAULT_API_URL
-        print(self._api_endpoint)
 
     def set_token(self, token):
         if token:
