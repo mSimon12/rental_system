@@ -4,6 +4,7 @@ from flaskr.api_interface import UserInterface
 
 bp = Blueprint('user', __name__, url_prefix='/user')
 
+user_interface = UserInterface()
 
 @bp.route('/register')
 def register_view():
@@ -20,7 +21,7 @@ def register_request():
         email = register_form.email.data
         password = register_form.password.data
 
-        call_status = UserInterface.add_user(username, email, password)
+        call_status = user_interface.add_user(username, email, password)
         if not call_status:
             flash("Not able to add new user!")
         else:
@@ -43,7 +44,7 @@ def login_request():
         username = login_form.username.data
         password = login_form.password.data
 
-        call_status, access_token = UserInterface.login_user(username, password)
+        call_status, access_token = user_interface.login_user(username, password)
 
         if call_status:
             response = make_response(redirect(url_for('main_page')))
@@ -53,7 +54,7 @@ def login_request():
                 httponly=True,
                 secure=True,
                 samesite="Lax",
-                max_age=60 * 60 * 24 * 7  # 1 week
+                max_age=60 * 10  # 10 minutes
             )
             return response
         else:
@@ -64,7 +65,7 @@ def login_request():
 
 @bp.route("/logout")
 def logout():
-    # UserInterface.logout_user(current_user.id)
+    # user_interface.logout_user(current_user.id)
 
     response = make_response(redirect(url_for('main_page')))
     response.set_cookie(

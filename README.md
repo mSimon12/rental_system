@@ -117,7 +117,8 @@ Once running, access the services at:
 - [x] Dockerized backend service.
 - [ ] Migrate from SQLite to PostgreSQL with SQLAlchemy ORM.
 - [ ] Add Flask-Admin for admin dashboard capabilities.
-- [ ] Support item comments from clients.
+- [ ] Support Item image
+- [ ] Support item comments and ratings from clients.
 - [ ] Deploy backend service.
 
 ### 🎨 Frontend
@@ -128,7 +129,12 @@ Once running, access the services at:
 - [x] Connected frontend to backend via API integration layer.
 - [x] Added item rent/return functionality.
 - [x] Dockerized frontend service.
-- [ ] Improve UI/UX and styling (currently minimal).
+- [x] Improve UI/UX and styling (currently minimal).
+  - [x] Login
+  - [x] Register
+  - [x] Main page
+  - [x] Item View Page
+  - [x] Manager Dashboard
 - [ ] Add client session pages (login, register, rentals).
 
 ---
