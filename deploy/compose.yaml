@@ -14,5 +14,7 @@ services:
     build:
       context: ../frontend
       dockerfile: container/Dockerfile
+    environment:
+      API_URL: "http://rent_api:5001"
     ports:
       - 5000:5000
