@@ -59,8 +59,13 @@ class ItemsInterface(APIInterface):
 
         return False, resp.status_code
 
-    def delete_item_from_store(self, item_id) -> bool:
-        print(item_id, flush=True)
+    def delete_item_from_store(self, item_name: str) -> tuple:
+        req_msg = {"item": item_name}
+        resp = requests.delete(f"{self._api_endpoint}/api/items/", json=req_msg, headers=self.header)
+        if resp.status_code == 204:
+            return True, resp.status_code
+        else:
+            return False, resp.status_code
 
     def rent_item(self, item_id, client_id) -> tuple:
         req_msg = {"user_id": client_id}

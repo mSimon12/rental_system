@@ -85,9 +85,12 @@
                                     <button type="button" class="action-btn edit-btn" onclick="editItem('{{ item }}')" aria-label="Edit item {{ template_items[item].item }}">
                                         <i class="fas fa-edit" aria-hidden="true"></i>
                                     </button>
-                                    <button type="button" class="action-btn delete-btn" onclick="deleteItem('{{ item }}')" aria-label="Delete item {{ template_items[item].item }}">
-                                        <i class="fas fa-trash" aria-hidden="true"></i>
-                                    </button>
+
+                                    <form method="POST" action="{{ url_for('manager.manager') }}" style="display:inline;">
+                                        {{ template_delete_item.hidden_tag() }}
+                                        {{ template_delete_item.item_name(value=template_items[item].item, type="hidden") }}
+                                        {{ template_delete_item.submit(class="action-btn delete-btn", aria_label="Delete item " ~ template_items[item].item) }}
+                                    </form>
                                 </div>
                             </td>
                         </tr>
@@ -173,11 +176,6 @@ document.getElementById('stockFilter').addEventListener('change', function () {
 
 function editItem(itemId) {
     alert(`Edit functionality for item: ${itemId}\n(This would open an edit modal in a real application)`);
-}
-function deleteItem(itemId) {
-    if (confirm(`Are you sure you want to delete this item?`)) {
-        {{ template_available_count}}
-    }
 }
 function exportData() {
     alert('Exporting inventory data...\n(This would generate and download a CSV/Excel file)');
