@@ -67,7 +67,6 @@ def get_item_info(item_id):
 
     return 'Required item not found', 404
 
-# TODO: require login here
 @bp.route('/<int:item_id>/rent', methods=['PUT'])
 @UsersService.login_required()
 def rent_item(item_id):
@@ -97,7 +96,6 @@ def rent_item(item_id):
 
     return '', 404
 
-# TODO: require login here
 @bp.route('/<int:item_id>/return', methods=['PUT'])
 @UsersService.login_required()
 def return_item(item_id):

@@ -1,6 +1,6 @@
 import json
 
-from flask import Blueprint, request, render_template, redirect, url_for
+from flask import Blueprint, request, render_template, redirect, url_for, flash
 from flaskr.api_interface import ItemsInterface
 from flaskr.forms import CommentForm, RentItemForm, ReturnItemForm
 import base64
@@ -13,7 +13,7 @@ items_interface = ItemsInterface()
 @bp.route('/')
 def store():
     items = items_interface.get_store_items()
-    items = [(items[item]['id'], items[item]['item'], items[item]['available']) for item in items]
+    items = [(items[item]['id'], items[item]['item'], items[item]['description'], items[item]['available']) for item in items]
     return render_template("store.html", template_items=items)
 
 
@@ -40,11 +40,17 @@ def product_view(id):
         elif rent_form.validate_on_submit() and rent_form.rent_item.data:
             call_status, resp_status = items_interface.rent_item(id, client_id)
             if not call_status:
-                return redirect(url_for('user.login_view'))
+                if resp_status == 401:
+                    return redirect(url_for('user.login_view'))
+                else:
+                    flash("No Stock available!", "error")
         elif return_form.validate_on_submit() and return_form.return_item.data:
-            call_status, resp = items_interface.return_item(id, client_id)
+            call_status, resp_status = items_interface.return_item(id, client_id)
             if not call_status:
-                return redirect(url_for('user.login_view'))
+                if resp_status == 401:
+                    return redirect(url_for('user.login_view'))
+                else:
+                    flash("Item is not rented!", "error")
 
         return redirect(url_for('store.product_view', id=id))
 

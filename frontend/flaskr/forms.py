@@ -28,6 +28,9 @@ class AddItemForm(FlaskForm):
     stock = IntegerField("Stock", validators=[DataRequired(), NumberRange(min=1)])
     submit = SubmitField("Submit")
 
+class DeleteItemForm(FlaskForm):
+    item_name = StringField("Item Name", validators=[DataRequired()])
+    submit = SubmitField("Delete")
 
 class RentItemForm(FlaskForm):
     rent_item = SubmitField("Rent")
