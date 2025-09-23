@@ -1,20 +1,33 @@
 version: '3.8'
 
 services:
-  backend:
-    container_name: rent_api
-    build:
-      context: ../backend
-      dockerfile: container/Dockerfile
+  db:
+    image: postgres:latest
+    container_name: rent_db
+    restart: always
+    volumes:
+      - ~/apps/postgres:/var/lib/postgresql/data
+    env_file:
+      - .env
     ports:
-      - 5001:5001
+      - 7000:5432
 
-  frontend:
-    container_name: rent_frontend
-    build:
-      context: ../frontend
-      dockerfile: container/Dockerfile
-    environment:
-      API_URL: "http://rent_api:5001"
-    ports:
-      - 5000:5000
+#  backend:
+#    container_name: rent_api
+#    build:
+#      context: ../backend
+#      dockerfile: container/Dockerfile
+#    environment:
+#      DATABASE_URI: 'postgres://admin:admin_pwd@rent_db:7000/rent_db'
+#    ports:
+#      - 5001:5001
+#
+#  frontend:
+#    container_name: rent_frontend
+#    build:
+#      context: ../frontend
+#      dockerfile: container/Dockerfile
+#    environment:
+#      API_URL: "http://rent_api:5001"
+#    ports:
+#      - 5000:5000

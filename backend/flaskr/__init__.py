@@ -5,7 +5,7 @@ from flask_login import LoginManager
 from flask_jwt_extended import JWTManager
 
 # Backend
-from flaskr import db
+from flaskr.models.db import db
 from flaskr.controllers import users
 from flaskr.controllers import items
 from flaskr.services.users import UsersService
@@ -18,7 +18,8 @@ def create_app(test_config=None):
 
     app.config.from_mapping(
         SECRET_KEY= os.getenv("API_SECRET"),
-        DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+        # DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+        SQLALCHEMY_DATABASE_URI=os.getenv("DATABASE_URI"),
     )
 
     jwt = JWTManager(app)
