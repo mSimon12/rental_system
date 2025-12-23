@@ -1,0 +1,82 @@
+<section class="login-container" aria-label="Login Section">
+  <div class="login-card">
+    <header class="login-header">
+      <h2>Welcome Back</h2>
+      <p>Sign in to your RentalHub account</p>
+    </header>
+
+    <form
+      class="login-form"
+      [formGroup]="loginForm"
+      (ngSubmit)="submit()"
+      aria-label="Login Form">
+
+      <!-- Username -->
+      <div class="form-group">
+        <label for="username">Username</label>
+
+        <div class="input-wrapper">
+          <input
+            id="username"
+            type="text"
+            class="form-input"
+            placeholder="Enter your username"
+            formControlName="username"
+            aria-describedby="usernameHelp" />
+
+          <i class="fas fa-user input-icon" aria-hidden="true"></i>
+        </div>
+
+        @if (username?.touched &&
+        username?.invalid) {
+          <div class="error-message" id="usernameHelp">
+            <i class="fas fa-exclamation-circle"></i>
+            Username is required
+          </div>
+        }
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Password</label>
+
+        <div class="input-wrapper">
+          <input
+            id="password"
+            type="password"
+            class="form-input"
+            placeholder="Enter your password"
+            formControlName="password"
+            aria-describedby="passwordHelp" />
+
+          <i class="fas fa-lock input-icon" aria-hidden="true"></i>
+        </div>
+
+        @if (password?.touched &&
+        password?.invalid) {
+          <div class="error-message" id="passwordHelp">
+            <i class="fas fa-exclamation-circle"></i>
+            Password is required
+          </div>
+        }
+      </div>
+
+      <button type="submit" class="login-btn">
+        Sign In
+      </button>
+    </form>
+
+    <footer class="login-footer">
+      <p>
+        Don't have an account?
+        <a routerLink="/register" class="register-link">
+          Create one here
+        </a>
+      </p>
+
+      <a href="#" class="forgot-password">
+        Forgot your password?
+      </a>
+    </footer>
+  </div>
+</section>

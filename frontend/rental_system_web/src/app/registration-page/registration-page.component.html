@@ -1,0 +1,93 @@
+<div class="register-container">
+  <div class="register-card">
+
+    <div class="register-header">
+      <h2>Join RentalHub</h2>
+      <p>Create your account to start renting</p>
+    </div>
+
+    <form class="register-form" [formGroup]="registerForm" (ngSubmit)="submit()">
+
+      <!-- Username -->
+      <div class="form-group">
+        <label>Username</label>
+        <div class="input-wrapper">
+          <input class="form-input" formControlName="username" placeholder="Choose a unique username">
+          <i class="fas fa-user input-icon"></i>
+        </div>
+        @if (username?.touched && username?.invalid) {
+          <div class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            Username is required (min 3 chars)
+          </div>
+        }
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label>Email Address</label>
+        <div class="input-wrapper">
+          <input class="form-input" formControlName="email" placeholder="Enter your email">
+          <i class="fas fa-envelope input-icon"></i>
+        </div>
+        @if (email?.touched && email?.invalid) {
+          <div class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            Valid email required
+          </div>
+        }
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-wrapper">
+          <input type="password" class="form-input" formControlName="password"
+                 placeholder="Create a strong password">
+          <i class="fas fa-lock input-icon"></i>
+        </div>
+
+        @if (passwordStrength(); as strength) {
+          <div class="password-strength" [ngClass]="strength.class">
+            {{ strength.text }}
+          </div>
+        }
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <div class="input-wrapper">
+          <input type="password" class="form-input" formControlName="password2"
+                 placeholder="Confirm your password">
+          <i class="fas fa-lock input-icon"></i>
+        </div>
+
+        @if (registerForm.errors?.['passwordsMismatch']) {
+          <div class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            Passwords do not match
+          </div>
+        }
+      </div>
+
+      <button class="btn btn-primary register-btn" type="submit">
+        Create Account
+      </button>
+
+      <div class="terms-text">
+        By creating an account, you agree to our
+        <a href="#">Terms of Service</a> and
+        <a href="#">Privacy Policy</a>.
+      </div>
+    </form>
+
+    <div class="register-footer">
+      <p>
+        Already have an account?
+        <a routerLink="/login" class="login-link">Sign in here</a>
+      </p>
+    </div>
+
+  </div>
+</div>
