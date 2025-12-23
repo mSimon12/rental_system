@@ -1,0 +1,118 @@
+<div class="product-container">
+
+  <a routerLink="/store" class="back-link">
+    <i class="fas fa-arrow-left"></i> Back to Store
+  </a>
+
+  <div class="product-header">
+
+    <div class="product-image">
+      <i class="fas fa-image product-image-placeholder"></i>
+    </div>
+
+    <div class="product-info">
+
+      <h1 class="product-title">{{ product().name }}</h1>
+
+      <div class="product-description">
+        <h3><i class="fas fa-info-circle"></i> Description</h3>
+        <p class="description-text">{{ product().description }}</p>
+      </div>
+
+      <div class="product-availability">
+        @if (product().available > 0) {
+          @if (product().available <= 2) {
+            <span class="availability-badge limited">Limited Stock</span>
+          } @else {
+            <span class="availability-badge available">Available</span>
+          }
+        } @else {
+          <span class="availability-badge unavailable">Out of Stock</span>
+        }
+
+        <span class="stock-info">
+          {{ product().available }}/{{ product().stock }} available
+        </span>
+      </div>
+
+      <div class="product-actions">
+        <button class="action-btn rent-btn" (click)="rentItem()">
+          <i class="fas fa-shopping-cart"></i> Rent
+        </button>
+
+        <button class="action-btn return-btn" (click)="returnItem()">
+          <i class="fas fa-undo"></i> Return
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- COMMENTS -->
+  <div class="comments-section">
+
+    <div class="comments-header">
+      <h3>
+        <i class="fas fa-comments"></i>
+        Reviews & Comments
+        <span class="comments-count">
+          ({{ product().comments.length }} reviews)
+        </span>
+      </h3>
+    </div>
+
+    @if (product().comments.length) {
+      @for (comment of product().comments; track comment) {
+        <div class="comment-item">
+          <div class="comment-header">
+            <span class="comment-author">Anonymous User</span>
+            <span class="comment-date">Just now</span>
+          </div>
+
+          <div class="comment-rating">
+            @for (i of [1,2,3,4,5]; track i) {
+              <i class="fas fa-star star filled"></i>
+            }
+          </div>
+
+          <div class="comment-text">{{ comment }}</div>
+        </div>
+      }
+    } @else {
+      <div class="no-comments">
+        <i class="fas fa-comment-slash"></i>
+        <p>No reviews yet. Be the first to share your experience!</p>
+      </div>
+    }
+
+    <!-- ADD COMMENT -->
+    <div class="add-comment-form">
+      <h4><i class="fas fa-plus-circle"></i> Add Your Review</h4>
+
+      <div class="form-group">
+        <label>Your Rating</label>
+        <div class="rating-input">
+          @for (i of [1,2,3,4,5]; track i) {
+            <i
+              class="fas fa-star rating-star"
+              [class.active]="rating() >= i"
+              (click)="setRating(i)">
+            </i>
+          }
+        </div>
+      </div>
+
+      <div class="form-group">
+        <textarea
+          class="comment-textarea"
+          placeholder="Share your experience with this item...">
+        </textarea>
+      </div>
+
+      <button class="submit-comment-btn">
+        <i class="fas fa-paper-plane"></i> Submit
+      </button>
+    </div>
+
+  </div>
+</div>

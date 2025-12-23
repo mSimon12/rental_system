@@ -12,8 +12,8 @@ import { StoreItem } from '../model/store-item';
 })
 export class StorePageComponent {
   storeItems: StoreItem[] = [
-    { id: 1, name: 'Camera', description: 'DSLR Camera', available: 3 },
-    { id: 2, name: 'Drill', description: 'Electric drill', available: 5 }
+    { id: 1, name: 'Camera', description: 'DSLR Camera', available: 3, stock: 5 },
+    { id: 2, name: 'Drill', description: 'Electric drill', available: 5, stock: 5 },
   ];
 
 }
