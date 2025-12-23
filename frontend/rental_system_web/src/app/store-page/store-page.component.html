@@ -1,0 +1,52 @@
+<!-- Search Section -->
+<section class="search-section">
+  <div class="container">
+    <div class="search-content">
+      <h2>Find what you need, when you need it</h2>
+      <p>Discover thousands of items available for rent</p>
+      <div class="search-bar">
+          <div class="search-input-group">
+              <i class="fas fa-search"></i>
+              <input type="text" placeholder="What are you looking for?">
+          </div>
+          <button class="search-btn">Search</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Items -->
+<section class="featured-section">
+  <div class="container">
+    <div class="section-header">
+      <h3>Featured Items</h3>
+      <div class="filter-controls">
+          <select class="filter-select">
+              <option>Sort by: Featured</option>
+              <option>Price: Low to High</option>
+              <option>Price: High to Low</option>
+              <option>Newest First</option>
+              <option>Most Popular</option>
+          </select>
+          <div class="view-toggle">
+              <button class="view-btn active" data-view="grid">
+                  <i class="fas fa-th"></i>
+              </button>
+              <button class="view-btn" data-view="list">
+                  <i class="fas fa-list"></i>
+              </button>
+          </div>
+      </div>
+    </div>
+
+    <div class="items-grid">
+      @for (item of storeItems; track item.id) {
+        <app-item-card [item]="item"></app-item-card>
+      }
+    </div>
+
+    <div class="load-more">
+      <button class="load-more-btn">Load More Items</button>
+    </div>
+  </div>
+</section>
