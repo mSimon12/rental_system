@@ -1,0 +1,25 @@
+<header class="header">
+  <div class="container">
+    <div class="header-content">
+      <a routerLink="/" class="logo" aria-label="RentalHub Home">
+        <i class="fas fa-home"></i>
+        <h1 class="site-title">RentalHub</h1>
+      </a>
+
+      <nav class="header-menu">
+        @if (isLoggedIn) {
+          @if (isAdmin) {
+            <a routerLink="/management" class="manager-link">
+              <i class="fas fa-cogs"></i> Manager
+            </a>
+          }
+          <span class="user-welcome">Welcome, {{ username }}!</span>
+          <button (click)="logout()" class="header-login-btn">Logout</button>
+        } @else {
+          <a routerLink="/register" class="header-menu-option">Register</a>
+          <a routerLink="/login" class="header-login-btn">Sign In</a>
+        }
+      </nav>
+    </div>
+  </div>
+</header>
