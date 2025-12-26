@@ -99,9 +99,9 @@ def login_user():
     return '', 400
 
 
-@bp.route('<int:user_id>/logout', methods=['POST'])
+@bp.route('/logout', methods=['POST'])
 @UsersService.login_required()
-def logout_user(user_id):
+def logout_user():
     # TODO: implement Blacklist
     # service = UsersService()
     # if service.block_user():
@@ -109,4 +109,4 @@ def logout_user(user_id):
     # else:
     #     return 'Failed to logout', 400
 
-    return 'Not implemented', 400
+    return '', 200
