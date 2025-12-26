@@ -43,6 +43,10 @@
       @for (item of storeItems; track item.id) {
         <app-item-card [item]="item"></app-item-card>
       }
+      @for (data of (someData$ | async); track data.id) {
+        {{ logItem(data) }}
+      }
+
     </div>
 
     <div class="load-more">
