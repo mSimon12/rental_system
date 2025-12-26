@@ -8,7 +8,7 @@ class Items:
         db = get_db()
 
         items = db.execute(
-            'SELECT id,item FROM items'
+            'SELECT id,name FROM items'
         ).fetchall()
 
         return items
@@ -52,8 +52,8 @@ class Items:
 
         try:
             db.execute(
-                "INSERT INTO items (item, description, stock_size, available) VALUES (?, ?, ?, ?)",
-                (item_info['item'], item_info['description'], item_info['stock'], item_info['stock']),
+                "INSERT INTO items (name, description, stock_size, available) VALUES (?, ?, ?, ?)",
+                (item_info['name'], item_info['description'], item_info['stock'], item_info['stock']),
             )
             db.commit()
         except db.Error:
@@ -67,7 +67,7 @@ class Items:
 
         try:
             db.execute(
-                "DELETE FROM items WHERE item = ?",
+                "DELETE FROM items WHERE name = ?",
                 (item_name,),
             )
             db.commit()
