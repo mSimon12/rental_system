@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 from flask_login import LoginManager
@@ -13,6 +14,11 @@ from flaskr.services.users import UsersService
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
+    CORS(
+        app,
+        resources={r"/api/*": {"origins": "http://localhost:4200"}},
+        supports_credentials=True
+    )
 
     load_dotenv()
 
