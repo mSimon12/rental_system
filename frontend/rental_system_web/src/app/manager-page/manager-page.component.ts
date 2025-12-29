@@ -5,12 +5,11 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { StoreItem } from '../model/store-item';
 import { ItemsApiService } from '../services/items-api.service';
-import {ItemCardComponent} from '../item-card/item-card.component';
 
 @Component({
   selector: 'app-manager-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ItemCardComponent],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './manager-page.component.html',
   styleUrl: './manager-page.component.css'
 })

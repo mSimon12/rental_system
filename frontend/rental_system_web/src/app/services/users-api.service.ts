@@ -47,18 +47,11 @@ export class UsersApiService extends APIInterface {
   }
 
   addUser(username: string, email: string, password: string): Observable<any> {
-    return this.http.post(
-      `${this.apiEndpoint}/users`,
-      { username, email, password }
-    );
+    return this.http.post(`${this.apiEndpoint}/users/`,{ username, email, password });
   }
 
   deleteUser(userInfo: any): Observable<any> {
-    return this.http.post(
-      `${this.apiEndpoint}/users`,
-      userInfo,
-      this.getAuthOptions()
-    );
+    return this.http.post(`${this.apiEndpoint}/users`, userInfo, this.getAuthOptions());
   }
 
   loginUser(username: string, password: string): Observable<boolean> {
