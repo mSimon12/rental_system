@@ -40,11 +40,8 @@
     </div>
 
     <div class="items-grid">
-      @for (item of storeItems; track item.id) {
+      @for (item of (storeItems | async); track item.id) {
         <app-item-card [item]="item"></app-item-card>
-      }
-      @for (data of (someData$ | async); track data.id) {
-        {{ logItem(data) }}
       }
 
     </div>

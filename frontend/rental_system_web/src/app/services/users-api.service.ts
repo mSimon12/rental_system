@@ -5,6 +5,7 @@ import { Observable, BehaviorSubject, of  } from 'rxjs';
 import { tap, map, catchError } from 'rxjs/operators';
 import { jwtDecode } from 'jwt-decode';
 import { CookieService } from 'ngx-cookie-service';
+import { ItemsApiService } from '../services/items-api.service';
 
 interface JwtPayload {
   sub: string;
@@ -28,6 +29,7 @@ export class UsersApiService extends APIInterface {
 
   constructor(
     http: HttpClient,
+    private itemsApi: ItemsApiService,
     private cookieService: CookieService
   ) {
     super(http);
@@ -74,6 +76,7 @@ export class UsersApiService extends APIInterface {
         });
 
         this.setToken(token);
+        this.itemsApi.setToken(token);
 
         // Update the BehaviorSubject
         this.updateCurrentUserInfo().subscribe(userInfo => {
@@ -96,6 +99,11 @@ export class UsersApiService extends APIInterface {
           username: null,
           is_admin: false
         });
+
+
+        this.clearToken()
+        this.itemsApi.clearToken();
+
       })
     );
   }

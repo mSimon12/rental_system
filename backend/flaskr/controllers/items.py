@@ -25,7 +25,7 @@ def add_item():
     valid = service.validate_input(request_input)
 
     if valid:
-        item_exists = service.verify_item_match(name=request_input['item'])
+        item_exists = service.verify_item_match(name=request_input['name'])
 
         if item_exists:
             return f"Item {request_input['name']} is already registered.", 400

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { APIInterface} from './api-interface';
 import { forkJoin, Observable, of } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'})
 export class ItemsApiService extends APIInterface{
@@ -39,10 +39,8 @@ export class ItemsApiService extends APIInterface{
     );
   }
 
-  addNewItemToStore(newItem: any): Observable<any> {
-    return this.http.post(
-      `${this.apiEndpoint}/items`,
-      newItem,
+  addNewItemToStore(name: string, description: string, stock: number): Observable<any> {
+    return this.http.post(`${this.apiEndpoint}/items/`, { name, description, stock },
       this.getAuthOptions()
     );
   }
@@ -52,7 +50,7 @@ export class ItemsApiService extends APIInterface{
       `${this.apiEndpoint}/items/`,
       {
         ...this.getAuthOptions(),
-        body: { item: itemName }
+        body: { name: itemName }
       }
     );
   }
