@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
+import {UsersApiService} from '../services/users-api.service';
 
 @Component({
   selector: 'app-login-page',
@@ -12,7 +13,9 @@ import { RouterModule } from '@angular/router';
 export class LoginPageComponent {
   loginForm : FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+              private router: Router,
+              private usersApi: UsersApiService) {
     this.loginForm = this.fb.nonNullable.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
@@ -20,10 +23,9 @@ export class LoginPageComponent {
   }
 
   get username() { return this.loginForm.get('username'); }
-
   get password() { return this.loginForm.get('password'); }
 
-  submit() {
+  submitLogin() {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
@@ -31,7 +33,12 @@ export class LoginPageComponent {
 
     const { username, password } = this.loginForm.getRawValue();
 
-    // Call Flask API
-    console.log(username, password);
+    this.usersApi.loginUser(username, password).subscribe({
+      next: () => {
+        console.log('Login success');
+        this.router.navigate(['/store']);
+      },
+      error: err => console.error('Login failed', err)
+    });
   }
 }
