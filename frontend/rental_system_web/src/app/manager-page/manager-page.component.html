@@ -9,19 +9,19 @@
   <section class="dashboard-stats">
     <div class="stat-card">
       <div class="stat-icon items"><i class="fas fa-boxes"></i></div>
-      <div class="stat-number">{{ totalItems() }}</div>
+      <div class="stat-number">{{ totalItems$ }}</div>
       <div class="stat-label">Total Items</div>
     </div>
 
     <div class="stat-card">
       <div class="stat-icon rented"><i class="fas fa-handshake"></i></div>
-      <div class="stat-number">{{ rentedCount() }}</div>
+      <div class="stat-number">{{ rentedCount$ }}</div>
       <div class="stat-label">Currently Rented</div>
     </div>
 
     <div class="stat-card">
       <div class="stat-icon available"><i class="fas fa-check-circle"></i></div>
-      <div class="stat-number">{{ availableCount() }}</div>
+      <div class="stat-number">{{ availableCount$ }}</div>
       <div class="stat-label">Available Items</div>
     </div>
   </section>
@@ -37,11 +37,11 @@
           <input
             class="search-input"
             placeholder="Search items..."
-            (input)="search.set($any($event.target).value)" />
+            (input)="search = $any($event.target).value" />
 
           <select
             class="filter-select"
-            (change)="stockFilter.set($any($event.target).value)">
+            (change)="stockFilter = $any($event.target).value">
             <option value="all">All Stock Levels</option>
             <option value="high">High Stock</option>
             <option value="medium">Medium Stock</option>
@@ -63,8 +63,8 @@
         </thead>
 
         <tbody>
-          @if (filteredItems().length) {
-            @for (item of filteredItems(); track item.id) {
+          @if (storeItems$ | async; as items) {
+            @for (item of filteredItems$(items); track item.id) {
               <tr>
                 <td class="item-name">{{ item.name }}</td>
                 <td class="item-description">{{ item.description }}</td>

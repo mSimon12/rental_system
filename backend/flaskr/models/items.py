@@ -28,7 +28,7 @@ class Items:
         db = get_db()
 
         item = db.execute(
-            'SELECT * FROM items WHERE item = ?', (name,)
+            'SELECT * FROM items WHERE name = ?', (name,)
         ).fetchone()
 
         return item
