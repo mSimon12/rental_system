@@ -6,6 +6,7 @@ import {UsersApiService} from '../services/users-api.service';
 
 @Component({
   selector: 'app-registration-page',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './registration-page.component.html',
   styleUrl: './registration-page.component.css'
@@ -70,7 +71,6 @@ export class RegistrationPageComponent {
     const value = this.password?.value || '';
     if (!value) return null;
 
-    let strength = 0;
     const rules = [
       value.length >= 8,
       /[A-Z]/.test(value),
@@ -79,7 +79,7 @@ export class RegistrationPageComponent {
       /[!@#$%^&*()_,.?":{}|<>]/.test(value)
     ];
 
-    strength = rules.filter(Boolean).length;
+    let strength = rules.filter(Boolean).length;
 
     if (strength < 3) return { text: 'Weak password', class: 'strength-weak' };
     if (strength < 5) return { text: 'Medium password', class: 'strength-medium' };

@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject, of  } from 'rxjs';
 import { tap, map, catchError } from 'rxjs/operators';
 import { jwtDecode } from 'jwt-decode';
 import { CookieService } from 'ngx-cookie-service';
-import { ItemsApiService } from '../services/items-api.service';
+import { ItemsApiService } from './items-api.service';
 
 interface JwtPayload {
   sub: string;
