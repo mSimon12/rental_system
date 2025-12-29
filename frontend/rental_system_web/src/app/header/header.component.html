@@ -7,14 +7,14 @@
       </a>
 
       <nav class="header-menu">
-        @if (isLoggedIn) {
-          @if (isAdmin) {
+        @if (userInfo && userInfo.user_logged_in) {
+          @if (userInfo.is_admin) {
             <a routerLink="/management" class="manager-link">
               <i class="fas fa-cogs"></i> Manager
             </a>
           }
-          <span class="user-welcome">Welcome, {{ username }}!</span>
-          <button (click)="logout()" class="header-login-btn">Logout</button>
+          <span class="user-welcome">Welcome, {{ userInfo.username }}!</span>
+          <button (click)="submitLogout()" class="header-login-btn">Logout</button>
         } @else {
           <a routerLink="/register" class="header-menu-option">Register</a>
           <a routerLink="/login" class="header-login-btn">Sign In</a>

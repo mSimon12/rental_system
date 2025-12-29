@@ -1,19 +1,37 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Router } from '@angular/router';
+import {UsersApiService} from '../services/users-api.service';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterModule],
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent {
-  isLoggedIn = false;
-  isAdmin = false;
-  username = '';
+export class HeaderComponent implements OnInit {
+  userInfo!: any;
 
-  logout() {
-    // call auth service
+  constructor(
+    private usersApi: UsersApiService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.usersApi.currentUser$.subscribe(u => this.userInfo = u);
   }
-}
 
+  submitLogout() {
+    this.usersApi.logoutUser().subscribe({
+      next: () => {
+        console.log('Logged out successfully');
+        this.router.navigate(['/store']);
+      },
+      error: err => {
+        console.error('Logout failed', err);
+      }
+    });
+  }
+
+}
