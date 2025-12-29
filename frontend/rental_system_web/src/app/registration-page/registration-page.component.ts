@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import {FormBuilder, FormGroup, Validators, AbstractControl, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
+import {Router, RouterModule} from '@angular/router';
+import {UsersApiService} from '../services/users-api.service';
 
 @Component({
   selector: 'app-registration-page',
@@ -12,7 +13,9 @@ import {RouterModule} from '@angular/router';
 export class RegistrationPageComponent {
   registerForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+              private router: Router,
+              private usersApi: UsersApiService) {
     this.registerForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
@@ -28,14 +31,31 @@ export class RegistrationPageComponent {
   get password2() { return this.registerForm.get('password2'); }
 
   // ---- submit
-  submit() {
+  submitRegistration() {
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
       return;
     }
 
     console.log(this.registerForm.value);
-    // call API here
+    const { username, email, password } = this.registerForm.getRawValue();
+
+    this.usersApi.addUser(username, email, password).subscribe({
+      next: () => {
+        console.log('Registration succeeded');
+        this.router.navigate(['/store']);
+
+        this.usersApi.loginUser(username, password).subscribe({
+          next: () => {
+            console.log('Login success');
+            this.router.navigate(['/store']);
+          },
+          error: err => console.error('Login failed', err)
+        });
+
+      },
+      error: err => console.error('Registration failed', err)
+    });
   }
 
   // ---- custom validator
