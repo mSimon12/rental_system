@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { RouterModule, Router } from '@angular/router';
+import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import {UsersApiService} from '../services/users-api.service';
 
 @Component({
@@ -15,6 +15,7 @@ export class LoginPageComponent {
 
   constructor(private fb: FormBuilder,
               private router: Router,
+              private route: ActivatedRoute,
               private usersApi: UsersApiService) {
     this.loginForm = this.fb.nonNullable.group({
       username: ['', Validators.required],
@@ -33,10 +34,20 @@ export class LoginPageComponent {
 
     const { username, password } = this.loginForm.getRawValue();
 
+    // read redirect from query params
+    const redirectUrl = this.route.snapshot.queryParamMap.get('redirect');
+
     this.usersApi.loginUser(username, password).subscribe({
       next: () => {
         console.log('Login success');
-        this.router.navigate(['/store']);
+
+        if (redirectUrl) {
+          // redirect to original requested page
+          this.router.navigateByUrl(redirectUrl);
+        } else {
+          // default fallback
+          this.router.navigateByUrl('/store');
+        }
       },
       error: err => console.error('Login failed', err)
     });
