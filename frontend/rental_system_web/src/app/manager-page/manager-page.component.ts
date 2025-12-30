@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { StoreItem } from '../model/store-item';
 import { ItemsApiService } from '../services/items-api.service';
 
@@ -17,6 +17,7 @@ import { ItemsApiService } from '../services/items-api.service';
 export class ManagerPageComponent implements OnInit {
   addItemForm: FormGroup;
 
+  private refresh$ = new BehaviorSubject<void>(undefined);
   storeItems$!: Observable<StoreItem[]>;
   totalItems$!: Observable<number>;
   rentedCount$!: Observable<number>;
@@ -35,7 +36,10 @@ export class ManagerPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.storeItems$ = this.itemsApi.getStoreItems();
+    // this.storeItems$ = this.itemsApi.getStoreItems();
+    this.storeItems$ = this.refresh$.pipe(
+      switchMap(() => this.itemsApi.getStoreItems())
+    );
 
     this.totalItems$ = this.storeItems$.pipe(
       map(items => items.length)
@@ -53,6 +57,10 @@ export class ManagerPageComponent implements OnInit {
       )
     );
 
+  }
+
+  refreshStoreItems(): void {
+    this.refresh$.next();
   }
 
   filteredItems$(items: StoreItem[]): StoreItem[] {
@@ -122,7 +130,10 @@ export class ManagerPageComponent implements OnInit {
     const { name, description, stock } = this.addItemForm.value;
 
     this.itemsApi.addNewItemToStore(name, description, stock).subscribe({
-      next: () => console.log('Item added successfully'),
+      next: () => {
+        this.refreshStoreItems();
+        console.log('Item added successfully')
+      },
       error: err => console.error('Failed to add item', err)
     });
 
