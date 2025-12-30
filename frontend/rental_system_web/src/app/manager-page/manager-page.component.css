@@ -61,6 +61,8 @@
 .stat-icon {
   font-size: 3rem;
   margin-bottom: 1rem;
+  display: grid;
+  place-items: center;
 }
 
 .stat-icon.items { color: #667eea; }

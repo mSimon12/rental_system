@@ -19,9 +19,11 @@ export class ManagerPageComponent implements OnInit {
 
   private refresh$ = new BehaviorSubject<void>(undefined);
   storeItems$!: Observable<StoreItem[]>;
-  totalItems$!: Observable<number>;
-  rentedCount$!: Observable<number>;
-  availableCount$!: Observable<number>;
+  summary$!: Observable<{
+    totalItems: number;
+    rentedCount: number;
+    availableCount: number;
+  }>;
 
   search = '';
   stockFilter: 'all' | 'high' | 'medium' | 'low' = 'all';
@@ -30,33 +32,38 @@ export class ManagerPageComponent implements OnInit {
               private itemsApi: ItemsApiService) {
     this.addItemForm = this.fb.group({
       name: ['', Validators.required],
-      description: ['', Validators.required],
+      description: [''],
       stock: [0, [Validators.required, Validators.min(1)]]
     });
   }
 
   ngOnInit() {
-    // this.storeItems$ = this.itemsApi.getStoreItems();
     this.storeItems$ = this.refresh$.pipe(
       switchMap(() => this.itemsApi.getStoreItems())
     );
 
-    this.totalItems$ = this.storeItems$.pipe(
-      map(items => items.length)
-    );
+    this.summary$ = this.storeItems$.pipe(
+      map(items => {
+        const totalItems = items.length;
 
-    this.rentedCount$ = this.storeItems$.pipe(
-      map(items =>
-        items.reduce((sum, i) => sum + (i.stock - i.available), 0)
-      )
-    );
+        const rentedCount = items.reduce((sum, item) => {
+          const stock = Number(item.stock ?? 0);
+          const available = Number(item.available ?? 0);
+          return sum + Math.max(stock - available, 0);
+        }, 0);
 
-    this.availableCount$ = this.storeItems$.pipe(
-      map(items =>
-        items.reduce((sum, i) => sum + i.available, 0)
-      )
-    );
+        const availableCount = items.reduce((sum, item) => {
+          const available = Number(item.available ?? 0);
+          return sum + Math.max(available, 0);
+        }, 0);
 
+        return {
+          totalItems,
+          rentedCount,
+          availableCount
+        };
+      })
+    );
   }
 
   refreshStoreItems(): void {
@@ -65,6 +72,7 @@ export class ManagerPageComponent implements OnInit {
 
   filteredItems$(items: StoreItem[]): StoreItem[] {
     return items.filter(item => {
+      console.log(item)
       const textMatch =
         item.name.toLowerCase().includes(this.search.toLowerCase()) ||
         item.description.toLowerCase().includes(this.search.toLowerCase());
@@ -142,7 +150,10 @@ export class ManagerPageComponent implements OnInit {
 
   deleteItem(item: StoreItem) {
     this.itemsApi.deleteItemFromStore(item.name).subscribe({
-      next: () => console.log('Item deleted successfully'),
+      next: () => {
+        this.refreshStoreItems();
+        console.log('Item deleted successfully')
+      },
       error: err => console.error('Failed to delete item', err)
     });
   }
