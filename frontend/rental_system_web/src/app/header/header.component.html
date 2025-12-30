@@ -9,7 +9,7 @@
       <nav class="header-menu">
         @if (userInfo && userInfo.user_logged_in) {
           @if (userInfo.is_admin) {
-            <a routerLink="/manager" class="manager-link">
+            <a routerLink="/manager" class="header-menu-option manager-link">
               <i class="fas fa-cogs"></i> Manager
             </a>
           }
