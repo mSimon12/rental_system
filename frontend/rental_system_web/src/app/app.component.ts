@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, Router } from '@angular/router';
 import {HeaderComponent} from './header/header.component';
 import { FooterComponent} from './footer/footer.component';
+import { UsersApiService } from './services/users-api.service';
 
 @Component({
   selector: 'app-root',
@@ -11,4 +12,15 @@ import { FooterComponent} from './footer/footer.component';
 })
 export class AppComponent {
   title = 'rental_system_web';
+
+  constructor(
+    private usersApi: UsersApiService,
+    private router: Router
+  ) {
+    this.usersApi.currentUser$.subscribe(user => {
+      if (!user.user_logged_in) {
+        this.router.navigate(['/store']);
+      }
+    });
+  }
 }
