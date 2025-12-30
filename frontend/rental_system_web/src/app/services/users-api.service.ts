@@ -33,6 +33,7 @@ export class UsersApiService extends APIInterface {
     private cookieService: CookieService
   ) {
     super(http);
+    this.refreshCurrentUserFromCookie();
   }
 
   getUsersList(): Observable<any> {
@@ -68,13 +69,7 @@ export class UsersApiService extends APIInterface {
           sameSite: 'Strict'
         });
 
-        this.setToken(token);
-        this.itemsApi.setToken(token);
-
-        // Update the BehaviorSubject
-        this.updateCurrentUserInfo().subscribe(userInfo => {
-          this.currentUserSubject.next(userInfo);
-        });
+        this.refreshCurrentUserFromCookie();
 
       }),
       map(() => true)
@@ -86,60 +81,64 @@ export class UsersApiService extends APIInterface {
       tap(() => {
         this.cookieService.delete('access_token_cookie', '/');
 
-        // Update the BehaviorSubject
-        this.currentUserSubject.next({
-          user_logged_in: false,
-          username: null,
-          is_admin: false
-        });
-
-
-        this.clearToken()
-        this.itemsApi.clearToken();
+        this.clearAuthState();
 
       })
     );
   }
 
-  private updateCurrentUserInfo() {
+  refreshCurrentUserFromCookie(): void {
     const token = this.cookieService.get('access_token_cookie');
+
     if (!token) {
-      return of({
+      this.currentUserSubject.next({
         user_logged_in: false,
         username: null,
         is_admin: false
       });
+      return;
     }
+
+    let userId: string;
 
     try {
-      // Decode JWT
       const decoded: JwtPayload = jwtDecode(token);
-      const userId = decoded.sub;
-
-      // Fetch user from backend
-      return this.getUserById(userId).pipe(
-        map(user => ({
-          user_logged_in: true,
-          username: user.username,
-          is_admin: user.role === 'Admin'
-        })),
-        catchError(() =>
-          of({
-            user_logged_in: false,
-            username: null,
-            is_admin: false
-          })
-        )
-      );
-
-    } catch (err) {
-      console.error('Invalid token', err);
-      return of({
-        user_logged_in: false,
-        username: null,
-        is_admin: false
-      });
+      userId = decoded.sub;
+    } catch {
+      this.clearAuthState();
+      return;
     }
+
+    this.setToken(token);
+    this.itemsApi.setToken(token);
+
+    this.getUserById(userId).pipe(
+      map(user => ({
+        user_logged_in: true,
+        username: user.username,
+        is_admin: user.role === 'Admin'
+      })),
+      catchError(() => {
+        this.clearAuthState();
+        return of(null);
+      })
+    ).subscribe(userInfo => {
+      if (userInfo) {
+        this.currentUserSubject.next(userInfo);
+      }
+    });
+  }
+
+  private clearAuthState(): void {
+    this.cookieService.delete('access_token_cookie', '/');
+    this.clearToken();
+    this.itemsApi.clearToken();
+
+    this.currentUserSubject.next({
+      user_logged_in: false,
+      username: null,
+      is_admin: false
+    });
   }
 
 }
