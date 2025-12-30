@@ -11,40 +11,40 @@
     </div>
 
     <div class="product-info">
+      @if (itemInfo | async; as product) {
+        <h1 class="product-title">{{ product.name }}</h1>
 
-      <h1 class="product-title">{{ product().name }}</h1>
+        <div class="product-description">
+          <h3><i class="fas fa-info-circle"></i> Description</h3>
+          <p class="description-text">{{ product.description }}</p>
+        </div>
 
-      <div class="product-description">
-        <h3><i class="fas fa-info-circle"></i> Description</h3>
-        <p class="description-text">{{ product().description }}</p>
-      </div>
-
-      <div class="product-availability">
-        @if (product().available > 0) {
-          @if (product().available <= 2) {
-            <span class="availability-badge limited">Limited Stock</span>
+        <div class="product-availability">
+          @if (product.available > 0) {
+            @if (product.available <= 2) {
+              <span class="availability-badge limited">Limited Stock</span>
+            } @else {
+              <span class="availability-badge available">Available</span>
+            }
           } @else {
-            <span class="availability-badge available">Available</span>
+            <span class="availability-badge unavailable">Out of Stock</span>
           }
-        } @else {
-          <span class="availability-badge unavailable">Out of Stock</span>
-        }
 
-        <span class="stock-info">
-          {{ product().available }}/{{ product().stock }} available
-        </span>
-      </div>
+          <span class="stock-info">
+            {{ product.available }}/{{ product.stock }} available
+          </span>
+        </div>
 
-      <div class="product-actions">
-        <button class="action-btn rent-btn" (click)="rentItem()">
-          <i class="fas fa-shopping-cart"></i> Rent
-        </button>
+        <div class="product-actions">
+          <button class="action-btn rent-btn" (click)="rentItem()">
+            <i class="fas fa-shopping-cart"></i> Rent
+          </button>
 
-        <button class="action-btn return-btn" (click)="returnItem()">
-          <i class="fas fa-undo"></i> Return
-        </button>
-      </div>
-
+          <button class="action-btn return-btn" (click)="returnItem()">
+            <i class="fas fa-undo"></i> Return
+          </button>
+        </div>
+      }
     </div>
   </div>
 
@@ -56,13 +56,13 @@
         <i class="fas fa-comments"></i>
         Reviews & Comments
         <span class="comments-count">
-          ({{ product().comments.length }} reviews)
+          ({{ comments.length }} reviews)
         </span>
       </h3>
     </div>
 
-    @if (product().comments.length) {
-      @for (comment of product().comments; track comment) {
+    @if (comments.length) {
+      @for (comment of comments; track comment) {
         <div class="comment-item">
           <div class="comment-header">
             <span class="comment-author">Anonymous User</span>
