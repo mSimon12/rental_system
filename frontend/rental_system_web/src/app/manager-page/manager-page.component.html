@@ -7,23 +7,25 @@
 
   <!-- STATS -->
   <section class="dashboard-stats">
-    <div class="stat-card">
-      <div class="stat-icon items"><i class="fas fa-boxes"></i></div>
-      <div class="stat-number">{{ totalItems$ }}</div>
-      <div class="stat-label">Total Items</div>
-    </div>
+    @if (summary$ | async; as summary) {
+      <div class="stat-card">
+        <div class="stat-icon items"><i class="fas fa-boxes"></i></div>
+        <div class="stat-number">{{ summary.totalItems }}</div>
+        <div class="stat-label">Total Items</div>
+      </div>
 
-    <div class="stat-card">
-      <div class="stat-icon rented"><i class="fas fa-handshake"></i></div>
-      <div class="stat-number">{{ rentedCount$ }}</div>
-      <div class="stat-label">Currently Rented</div>
-    </div>
+      <div class="stat-card">
+        <div class="stat-icon rented"><i class="fas fa-handshake"></i></div>
+        <div class="stat-number">{{ summary.rentedCount }}</div>
+        <div class="stat-label">Currently Rented</div>
+      </div>
 
-    <div class="stat-card">
-      <div class="stat-icon available"><i class="fas fa-check-circle"></i></div>
-      <div class="stat-number">{{ availableCount$ }}</div>
-      <div class="stat-label">Available Items</div>
-    </div>
+      <div class="stat-card">
+        <div class="stat-icon available"><i class="fas fa-check-circle"></i></div>
+        <div class="stat-number">{{ summary.availableCount }}</div>
+        <div class="stat-label">Available Items</div>
+      </div>
+    }
   </section>
 
   <section class="manager-content">
