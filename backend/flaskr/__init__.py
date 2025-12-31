@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 from flask_login import LoginManager
@@ -13,11 +14,21 @@ from flaskr.services.users import UsersService
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
+    CORS(
+        app,
+        resources={r"/api/*": {
+            "origins": [
+                "http://localhost:4200",  # ng serve
+                "http://localhost:5000"  # docker + nginx
+            ]
+        }},
+        supports_credentials=True
+    )
 
     load_dotenv()
 
     app.config.from_mapping(
-        SECRET_KEY= os.getenv("API_SECRET"),
+        SECRET_KEY=os.getenv("API_SECRET"),
         DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
     )
 
