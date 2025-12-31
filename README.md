@@ -120,6 +120,7 @@ Once running, access the services at:
 - [ ] Support Item image
 - [ ] Support item comments and ratings from clients.
 - [ ] Deploy backend service.
+- [ ] Update items list available info and implement filtering and pagination.
 
 ### 🎨 Frontend
 
@@ -134,7 +135,9 @@ Once running, access the services at:
   - [x] Register
   - [x] Main page
   - [x] Item View Page
-  - [x] Manager Dashboard
+  - [x] Manager Dashboard 
+  - [ ] Add edit popup menu
+  - [ ] Add Bulk import/update items
 - [ ] Add client session pages (login, register, rentals).
 
 ---
