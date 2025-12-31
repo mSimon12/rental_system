@@ -1,13 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 export abstract class APIInterface {
-  protected readonly DEFAULT_API_URL = 'http://localhost:5001/api';
-  protected apiEndpoint: string;
+  // Same-origin API via Nginx reverse proxy
+  protected apiEndpoint = environment.apiUrl;
   protected headers: HttpHeaders | null = null;
 
-  protected constructor(protected http: HttpClient) {
-    this.apiEndpoint = (window as any).__env?.API_URL || this.DEFAULT_API_URL;
-  }
+  protected constructor(protected http: HttpClient) {}
 
   setToken(token: string | null): void {
     if (token) {
