@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   backend:
@@ -7,14 +7,14 @@ services:
       context: ../backend
       dockerfile: container/Dockerfile
     ports:
-      - 5001:5001
+      - "5001:5001"
 
   frontend:
     container_name: rent_frontend
     build:
       context: ../frontend
       dockerfile: container/Dockerfile
-    environment:
-      API_URL: "http://rent_api:5001"
     ports:
-      - 5000:5000
+      - "5000:80"
+    depends_on:
+      - backend

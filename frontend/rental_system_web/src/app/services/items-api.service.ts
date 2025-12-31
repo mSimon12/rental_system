@@ -29,21 +29,21 @@ export class ItemsApiService extends APIInterface {
   }
 
   getItemsIdMap(): Observable<{ id: string }[]> {
-    return this.http.get<{ id: string }[]>(`${this.apiEndpoint}/items/`);
+    return this.http.get<any>(`${this.apiEndpoint}/items/`).pipe(
+      map(res => Array.isArray(res) ? res : [])
+    );
   }
 
   getStoreItems(): Observable<StoreItem[]> {
     return this.getItemsIdMap().pipe(
       switchMap(items => {
-        if (!items || items.length === 0) {
+        if (!Array.isArray(items) || items.length === 0) {
           return of([]);
         }
 
-        const requests = items.map(item =>
-          this.getItemInfo(item.id)
+        return forkJoin(
+          items.map(item => this.getItemInfo(item.id))
         );
-
-        return forkJoin(requests);
       })
     );
   }
