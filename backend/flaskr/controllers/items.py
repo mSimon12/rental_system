@@ -25,10 +25,10 @@ def add_item():
     valid = service.validate_input(request_input)
 
     if valid:
-        item_exists = service.verify_item_match(name=request_input['item'])
+        item_exists = service.verify_item_match(name=request_input['name'])
 
         if item_exists:
-            return f"Item {request_input['item']} is already registered.", 400
+            return f"Item {request_input['name']} is already registered.", 400
 
         new_item_added = service.add_item(request_input)
 
@@ -42,14 +42,14 @@ def add_item():
 def delete_item():
     request_input = request.get_json()
 
-    if 'item' not in request_input.keys():
+    if 'name' not in request_input.keys():
         return 'Item name missing!', 400
 
     service = ItemsService()
-    item_exists = service.verify_item_match(name=request_input['item'])
+    item_exists = service.verify_item_match(name=request_input['name'])
 
     if item_exists:
-        if service.delete_item(request_input['item']):
+        if service.delete_item(request_input['name']):
             return '', 204
 
     return 'Required item not found', 404
@@ -66,6 +66,7 @@ def get_item_info(item_id):
             return jsonify(item_info), 200
 
     return 'Required item not found', 404
+
 
 @bp.route('/<int:item_id>/rent', methods=['PUT'])
 @UsersService.login_required()
@@ -95,6 +96,7 @@ def rent_item(item_id):
         return '', 204
 
     return '', 404
+
 
 @bp.route('/<int:item_id>/return', methods=['PUT'])
 @UsersService.login_required()

@@ -1,0 +1,33 @@
+<div class="item-card">
+<!--  <div class="item-image">-->
+<!--      <i class="fas fa-image product-image-placeholder"></i>-->
+<!--      <div class="item-badge">Featured</div>-->
+<!--      <div class="item-badge popular">Popular</div>-->
+<!--  </div>-->
+  <div class="item-content">
+    <button class="favorite-btn">
+      <i class="far fa-heart"></i>
+    </button>
+
+    <h4>{{ item.name }}</h4>
+    <p class="item-description">
+      {{ item.description }}
+    </p>
+    <div class="item-details">
+      <span></span>
+      <span class="rating">
+          <i class="fas fa-star"></i>
+          4.8 (24 reviews)
+      </span>
+    </div>
+
+    <div class="item-footer">
+      <div class="available">
+            <span class="available-amount">
+              Available: {{ item.available }}
+            </span>
+      </div>
+      <a class="rent-btn" [routerLink]="['/store', item.id]">Rent Now</a>
+    </div>
+  </div>
+</div>
