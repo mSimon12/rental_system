@@ -29,8 +29,8 @@ def create_app(test_config=None):
 
     app.config.from_mapping(
         SECRET_KEY=os.getenv("API_SECRET"),
-        # DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
-        SQLALCHEMY_DATABASE_URI=os.getenv("DATABASE_URI"),
+        DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+        # SQLALCHEMY_DATABASE_URI=os.getenv("DATABASE_URI"),
     )
 
     jwt = JWTManager(app)
