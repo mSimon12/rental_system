@@ -53,7 +53,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          if [ -f backend/requirements.txt ]; then pip backend/install -r requirements.txt; fi
+          if [ -f backend/requirements.txt ]; then pip install -r backend/requirements.txt; fi
           pip install pytest pytest-cov
 
       - name: Run Tests with Coverage
