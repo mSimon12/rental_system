@@ -3,7 +3,7 @@ from flaskr.models.items import Items
 
 class ItemsService:
     item_pattern = {
-        'item': str,
+        'name': str,
         'description': str,
         'stock': int
     }
@@ -35,8 +35,16 @@ class ItemsService:
     def get_items_list():
         queried_items = Items.query_items_list()
 
+        items_as_list = [
+            {
+                "id": row["id"],
+                "name": row["name"]
+            }
+            for row in queried_items
+        ]
+
         if queried_items:
-            return dict(queried_items)
+            return items_as_list
         else:
             return None
 

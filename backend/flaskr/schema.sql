@@ -15,7 +15,7 @@ INSERT INTO roles (id, role) VALUES
 
 CREATE TABLE items (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  item TEXT UNIQUE NOT NULL,
+  name TEXT UNIQUE NOT NULL,
   description TEXT NOT NULL,
   stock_size INTEGER NOT NULL,
   available INTEGER

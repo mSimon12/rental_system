@@ -8,7 +8,7 @@ class TestApiItems:
 
     @pytest.fixture
     def item_request_data(self):
-        return {"item": "Lord of the Rings 1",
+        return {"name": "Lord of the Rings 1",
                 "description": "The Ring Society",
                 "stock": 8}
 
@@ -40,14 +40,15 @@ class TestApiItems:
         response = api_client.get('/api/items/')
         assert response.status_code == 200
         assert len(response.json) == 1
-        for item_id in response.json.keys():
-            assert response.json[item_id] == 'test item'
+        for item in response.json:
+            assert item['name'] == 'test item'
 
     # TEST GETTING SPECIFIC ITEM INFO
     def test_get_item_info(self, api_client):
         response = api_client.get('/api/items/')
 
-        for item_id in response.json.keys():
+        for item in response.json:
+            item_id = item['id']
             response = api_client.get(f'/api/items/{item_id}')
             assert response.status_code == 200
 
@@ -57,7 +58,10 @@ class TestApiItems:
         assert response.status_code == 201
 
         response = api_client.get('/api/items/', headers=self.header)
-        assert item_request_data['item'] in list(response.json.values())[-1]
+        items_names = []
+        for item in response.json:
+            items_names.append(item['name'])
+        assert item_request_data['name'] in items_names
 
     def test_add_item_avoid_duplicated(self, api_client, item_request_data, login_admin_user):
         response = api_client.post('/api/items/', json=item_request_data, headers=self.header)
@@ -67,7 +71,7 @@ class TestApiItems:
 
     def test_add_item_missing_info(self, api_client, item_request_data, login_admin_user):
         # missing item name
-        missing_req_data = {key: value for key, value in item_request_data.items() if key != 'item'}
+        missing_req_data = {key: value for key, value in item_request_data.items() if key != 'name'}
         response = api_client.post('/api/items/', json=missing_req_data, headers=self.header)
         assert response.status_code == 400
 
@@ -83,11 +87,11 @@ class TestApiItems:
 
     def test_add_item_invalid_item_name(self, api_client, item_request_data, login_admin_user):
         # invalid item
-        item_request_data['item'] = None
+        item_request_data['name'] = None
         response = api_client.post('/api/items/', json=item_request_data, headers=self.header)
         assert response.status_code == 400
 
-        item_request_data['item'] = 1.1
+        item_request_data['name'] = 1.1
         response = api_client.post('/api/items/', json=item_request_data, headers=self.header)
         assert response.status_code == 400
 
@@ -132,7 +136,7 @@ class TestApiItems:
         assert response.status_code == 201
 
         # missing item name
-        missing_req_data = {key: value for key, value in item_request_data.items() if key != 'item'}
+        missing_req_data = {key: value for key, value in item_request_data.items() if key != 'name'}
         response = api_client.delete('/api/items/', json=missing_req_data, headers=self.header)
         assert response.status_code == 400
 

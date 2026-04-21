@@ -10,7 +10,28 @@ registration, item availability, rental tracking, and administrative stock manag
 
 This application is composed of two services:
 - A RESTful **Backend API** built with Flask ([code here](./backend))
-- A Flask-based **Frontend** for store operators and clients ([code here](./frontend))
+- A modern **Angular Frontend** for store operators and clients ([code here](./frontend/rental_system_web))
+
+## 🛠️ Tech Stack
+
+<div align="left">
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" height="30" alt="python logo"  />
+  <img width="12" />
+  <img src="https://skillicons.dev/icons?i=flask" height="30" alt="flask logo"  />
+  <img width="12" />
+  <img src="https://skillicons.dev/icons?i=typescript" height="30" alt="typescript logo"  />
+  <img width="12" />
+  <img src="https://skillicons.dev/icons?i=angular" height="30" alt="angular logo"  />
+  <img width="12" />
+  <img src="https://skillicons.dev/icons?i=sqlite" height="30" alt="sqlite logo"  />
+  <img width="12" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" height="30" alt="postgresql logo"  />
+  <img width="12" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" height="30" alt="git logo"  />
+  <img width="12" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" height="30" alt="docker logo"  />
+  <img width="12" />
+</div>
 
 ---
 
@@ -21,28 +42,11 @@ This application is composed of two services:
 - 📦 Item rental and return workflows  
 - 🗃️ Track which client rented which item  
 - 🔄 Admin view for inventory and stock management  
-- 🌐 Simple Jinja-based web interface  
+- 🎨 Modern, responsive Angular web interface  
 - 🐳 Fully Dockerized with multi-service support  
 - 🧪 Unit testing and basic CI setup  
 
----
-
-## 🛠️ Tech Stack
-
-<div align="left">
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" height="30" alt="python logo"  />
-  <img width="12" />
-  <img src="https://skillicons.dev/icons?i=flask" height="30" alt="flask logo"  />
-  <img width="12" />
-  <img src="https://skillicons.dev/icons?i=sqlite" height="30" alt="flask logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" height="30" alt="postgresql logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" height="30" alt="git logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" height="30" alt="docker logo"  />
-  <img width="12" />
-</div>
+https://github.com/user-attachments/assets/1e4a8d69-29e3-4a72-ba5f-82a43ed2cb36
 
 ---
 
@@ -59,10 +63,9 @@ cd rental_system
 
 ### 🔐 Environment Setup
 
-Both backend and frontend services require a .env file for basic API key authentication. For development, you can use default values:
+The backend service requires a ``.env`` file for basic API key authentication. For development, you can use default values:
 ```bash
 echo -e 'API_KEY=default-key\nAPI_SECRET=default-secret' > backend/flaskr/.env
-echo -e 'API_KEY=default-key\nAPI_SECRET=default-secret' > frontend/flaskr/.env
 ```
 > [!NOTE]  
 > Be sure to replace these values with secure credentials in production environments.
@@ -72,8 +75,9 @@ echo -e 'API_KEY=default-key\nAPI_SECRET=default-secret' > frontend/flaskr/.env
 You can run the system either directly on your machine or using Docker.
 
 ### 🐍 Option 1: Run Without Containers
-1. Install the required Python packages ``pip install -r requirements.txt``
-2. Open two terminals.
+1. Install backend dependencies: ``pip install -r backend/requirements.txt``
+2. Install frontend dependencies: ``npm install`` (from `frontend/rental_system_web/` directory)
+3. Open two terminals.
 - Terminal 1: Start the backend
 
 ```bash
@@ -84,12 +88,16 @@ flask --app backend/flaskr init-db
 flask --app backend/flaskr run -p 5001
 ```
 
- - Terminal 2: Start the frontend
+- Terminal 2: Start the frontend development server
 
 ```bash
-# Starts the application Frontend
-flask --app frontend/flaskr run -p 5000
+cd frontend/rental_system_web
+
+# Starts the Angular development server
+npm start
 ```
+
+The application will be available at `http://localhost:4200`
 
 ### 🐳 Option 2: Run with Docker (Recommended)
 Start both backend and frontend services using Docker Compose:
@@ -120,30 +128,35 @@ Once running, access the services at:
 - [ ] Support Item image
 - [ ] Support item comments and ratings from clients.
 - [ ] Deploy backend service.
+- [ ] Update items list available info and implement filtering and pagination.
 
 ### 🎨 Frontend
 
-- [x] Built basic Jinja-based templates to display item listings and availability.
-- [x] Implemented item-specific detail pages.
-- [x] Created store manager interface for item and rental management.
-- [x] Connected frontend to backend via API integration layer.
+- [x] Built a modern Single Page Application (SPA) using Angular with TypeScript.
+- [x] Implemented item listings with availability display.
+- [x] Created item-specific detail pages.
+- [x] Built store manager interface for item and rental management.
+- [x] Connected frontend to backend via HTTP service layer.
 - [x] Added item rent/return functionality.
 - [x] Dockerized frontend service.
-- [x] Improve UI/UX and styling (currently minimal).
-  - [x] Login
-  - [x] Register
-  - [x] Main page
-  - [x] Item View Page
-  - [x] Manager Dashboard
-- [ ] Add client session pages (login, register, rentals).
+- [x] Improved UI/UX with professional styling.
+  - [x] Login page
+  - [x] Registration page
+  - [x] Main store page
+  - [x] Item details page
+  - [x] Manager dashboard
+  - [ ] Add edit popup menu
+  - [ ] Add bulk import/update items
+- [ ] Add client session and rental history pages.
+- [ ] Implement unit and integration tests with Karma/Jasmine.
 
 ---
 
 ## 🧩 System Architecture
 
 The Rental System application is composed of two isolated services,
-a **Backend API** and a **server-rendered Frontend**, both built using 
-Flask and deployed as independent containers.
+a **Backend API** built with Flask and an **Angular Frontend**, both 
+deployed as independent containers.
 
 ### 🧠 Backend (API Service)
 
@@ -157,19 +170,21 @@ This structure provides clear separation of concerns, improves maintainability, 
 
 ### 🎨 Frontend (Web Interface)
 
-The frontend is also a Flask application, using **Jinja templates** to serve server-side HTML pages. It includes:
+The frontend is a modern **Single Page Application (SPA)** built with **Angular** and **TypeScript**. It includes:
 
-- **Views**: Website endpoints that handle UI rendering.
-- **API Interface Layer**: Abstracts API calls and response handling, shielding UI code from backend logic and request syntax.
+- **Components**: Reusable UI building blocks (Header, Footer, Item Card, Login, etc.) with encapsulated styles and logic.
+- **Services**: API abstraction layer that handles HTTP communication with the backend, providing clean data access to components.
+- **Routes**: Angular routing enables client-side navigation between pages without full page reloads.
+- **Guards**: Route protection to ensure authenticated access to admin and protected pages.
 
-This approach enables a responsive admin and user experience without needing a separate frontend stack like React or Vue.
+This approach provides a responsive, interactive user experience with client-side rendering while maintaining clean separation between UI and business logic.
 
 ### 🔁 Request Flow
 
-The user interacts with the **Frontend view**, which:
-1. Calls the **API Interface**, preparing and sending HTTP requests.
-2. The **Backend controller** receives the request, calls the appropriate **Service**, and uses the **Model** layer to read/write data.
-3. Responses are returned to the **Frontend**, which renders templates or displays messages accordingly.
-
+The user interacts with the **Angular Frontend**, which:
+1. Calls **Angular Services**, preparing and sending HTTP requests to the backend API.
+2. The **Backend Controller** receives the request, calls the appropriate **Service**, and uses the **Model** layer to read/write data.
+3. **API Responses** are returned to the Frontend services, which update component state and trigger UI re-rendering.
+4. The **Angular component** displays the updated data to the user in real-time without requiring page reloads.
 
 ![Representation of the system components](images/arch.png)

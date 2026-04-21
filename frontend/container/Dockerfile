@@ -1,31 +1,31 @@
 # syntax=docker/dockerfile:1
 
-ARG PYTHON_VERSION=3.12
-FROM python:${PYTHON_VERSION}-slim as base
-
-# Prevents Python from writing pyc files.
-ENV PYTHONDONTWRITEBYTECODE=1
-
-# Keeps Python from buffering stdout and stderr to avoid situations where
-# the application crashes without emitting any logs due to buffering.
-ENV PYTHONUNBUFFERED=1
+############################
+# Build stage
+############################
+FROM node:20-alpine AS build
 
 WORKDIR /app
 
-# Download dependencies as a separate step to take advantage of Docker's caching.
-# Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
-# Leverage a bind mount to requirements.txt to avoid having to copy them into
-# into this layer.
-RUN --mount=type=cache,target=/root/.cache/pip \
-    --mount=type=bind,source=requirements.txt,target=requirements.txt \
-    python -m pip install -r requirements.txt
+ARG API_URL
+ENV API_URL=${API_URL}
 
-# Copy the source code into the container.
-COPY flaskr flaskr
+COPY rental_system_web/package*.json ./
+RUN npm ci
 
-# Expose the port that the application listens on.
-EXPOSE 5000
-EXPOSE 5001
+COPY rental_system_web .
+RUN npm run build -- --configuration production
 
-# Run the application.
-CMD flask --app flaskr run -h 0.0.0.0 -p 5000
+
+############################
+# Runtime stage
+############################
+FROM nginx:alpine
+
+RUN rm /etc/nginx/conf.d/default.conf
+COPY container/nginx.conf /etc/nginx/conf.d/default.conf
+
+COPY --from=build /app/dist/rental_system_web /usr/share/nginx/html
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
