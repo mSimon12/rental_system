@@ -25,13 +25,7 @@ This application is composed of two services:
 - 🐳 Fully Dockerized with multi-service support  
 - 🧪 Unit testing and basic CI setup  
 
----
-
-## 📺 App Preview
-<video width="100%" controls>
-  <source src="images/preview.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+https://github.com/user-attachments/assets/1e4a8d69-29e3-4a72-ba5f-82a43ed2cb36
 
 ---
 
