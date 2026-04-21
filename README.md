@@ -46,7 +46,7 @@ This application is composed of two services:
 - 🐳 Fully Dockerized with multi-service support  
 - 🧪 Unit testing and basic CI setup  
 
-https://github.com/user-attachments/assets/1e4a8d69-29e3-4a72-ba5f-82a43ed2cb36
+https://github.com/user-attachments/assets/7e11d286-a016-4f89-9a5f-9dfbb9147959
 
 ---
 
