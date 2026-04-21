@@ -12,23 +12,6 @@ This application is composed of two services:
 - A RESTful **Backend API** built with Flask ([code here](./backend))
 - A modern **Angular Frontend** for store operators and clients ([code here](./frontend/rental_system_web))
 
----
-
-## 🚀 Features
-
-- 🔐 JWT-based user authentication
-- 🧾 Client registration, login, and session management  
-- 📦 Item rental and return workflows  
-- 🗃️ Track which client rented which item  
-- 🔄 Admin view for inventory and stock management  
-- 🎨 Modern, responsive Angular web interface  
-- 🐳 Fully Dockerized with multi-service support  
-- 🧪 Unit testing and basic CI setup  
-
-https://github.com/user-attachments/assets/1e4a8d69-29e3-4a72-ba5f-82a43ed2cb36
-
----
-
 ## 🛠️ Tech Stack
 
 <div align="left">
@@ -52,6 +35,21 @@ https://github.com/user-attachments/assets/1e4a8d69-29e3-4a72-ba5f-82a43ed2cb36
 
 ---
 
+## 🚀 Features
+
+- 🔐 JWT-based user authentication
+- 🧾 Client registration, login, and session management  
+- 📦 Item rental and return workflows  
+- 🗃️ Track which client rented which item  
+- 🔄 Admin view for inventory and stock management  
+- 🎨 Modern, responsive Angular web interface  
+- 🐳 Fully Dockerized with multi-service support  
+- 🧪 Unit testing and basic CI setup  
+
+https://github.com/user-attachments/assets/1e4a8d69-29e3-4a72-ba5f-82a43ed2cb36
+
+---
+
 ## ⚙️ Getting Started
 
 Follow these steps to set up and run the Rental System application locally or using Docker.
@@ -65,7 +63,7 @@ cd rental_system
 
 ### 🔐 Environment Setup
 
-The backend service requires a .env file for basic API key authentication. For development, you can use default values:
+The backend service requires a ``.env`` file for basic API key authentication. For development, you can use default values:
 ```bash
 echo -e 'API_KEY=default-key\nAPI_SECRET=default-secret' > backend/flaskr/.env
 ```
